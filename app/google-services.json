@@ -1,0 +1,60 @@
+{
+  "project_info": {
+    "project_id": "campus-cd683",
+    "project_number": "964982265965",
+    "name": "Campus"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964982265965:android:6abc8914b1ab667b",
+        "client_id": "android:com.iesnules.apps.campus",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.iesnules.apps.campus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964982265965-sat93cn1p1p33hgh5jbqilfjbku1u2hd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iesnules.apps.campus",
+            "certificate_hash": "F56EF1FB61D382429640E579C7C4E02E74852A17"
+          }
+        },
+        {
+          "client_id": "964982265965-rg07s19fedsnm19cg5p0b8th0923a3fe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964982265965-rg07s19fedsnm19cg5p0b8th0923a3fe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
