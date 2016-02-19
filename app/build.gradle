@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.iesnules.apps.campus"
         minSdkVersion 15
@@ -16,6 +17,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
 }
 
@@ -25,10 +28,14 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
-    //compile 'com.google.android.gms:play-services-plus:8.4.0'
-    //compile 'com.google.android.gms:play-services-auth:8.4.0'
-    //compile 'com.google.android.gms:play-services-appinvite:8.4.0'
-    //compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-identity:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
 }
+
+
+
+
+
+
 
 apply plugin: 'com.google.gms.google-services'
