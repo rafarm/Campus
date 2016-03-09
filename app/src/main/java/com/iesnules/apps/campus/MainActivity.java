@@ -262,12 +262,12 @@ public class MainActivity extends AppCompatActivity implements
     private void updateUI(boolean signedIn) {
         //TODO: Show/Hide UI widgets depending upon user authentication status.
         if (signedIn) {
-            mTextView.setText(mSignInAccount.getDisplayName());
-            mTextView.setVisibility(View.VISIBLE);
+            //mTextView.setText(mSignInAccount.getDisplayName());
+            //mTextView.setVisibility(View.VISIBLE);
         }
         else {
-            mTextView.setText("");
-            mTextView.setVisibility(View.GONE);
+            //mTextView.setText("");
+            //mTextView.setVisibility(View.GONE);
         }
     }
 
