@@ -1,6 +1,7 @@
 package com.iesnules.apps.campus;
 
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,8 +46,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleApiClient mGoogleApiClient;
 
-    private TextView mTextView;
-    private ProgressBar mProgressBar;
+    private TextView mUserNameTextView;
+    private TextView mUserEmailTextView;
+    private ImageView mUserPictureImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        mTextView = (TextView) findViewById(R.id.textView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        mUserNameTextView = (TextView)headerView.findViewById(R.id.userName);
+        mUserEmailTextView = (TextView)headerView.findViewById(R.id.userEmail);
+        mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
     }
 
     @Override
@@ -262,12 +267,14 @@ public class MainActivity extends AppCompatActivity implements
     private void updateUI(boolean signedIn) {
         //TODO: Show/Hide UI widgets depending upon user authentication status.
         if (signedIn) {
-            //mTextView.setText(mSignInAccount.getDisplayName());
-            //mTextView.setVisibility(View.VISIBLE);
+            mUserNameTextView.setText(mSignInAccount.getDisplayName());
+            mUserEmailTextView.setText(mSignInAccount.getEmail());
+            mUserPictureImageView.setImageURI(mSignInAccount.getPhotoUrl());
         }
         else {
-            //mTextView.setText("");
-            //mTextView.setVisibility(View.GONE);
+            mUserNameTextView.setText("");
+            mUserEmailTextView.setText("");
+            mUserPictureImageView.setImageURI(null);
         }
     }
 
@@ -275,14 +282,16 @@ public class MainActivity extends AppCompatActivity implements
      * Displays progress indicator for long processes, like user signing in.
      */
     private void showProgressIndicator() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     /**
      * Hides progress indicator.
      */
     private void hideProgressIndicator() {
-        mProgressBar.setVisibility(View.GONE);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
