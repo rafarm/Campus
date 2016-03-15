@@ -32,6 +32,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.images.ImageManager;
+import com.google.android.gms.plus.Plus;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements
     private static GoogleSignInAccount mSignInAccount;
 
     private GoogleApiClient mGoogleApiClient;
+
+    private ImageManager mImageManager;
 
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
+                //.requestProfile()
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -74,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(AppIndex.API).build();
+                .addApi(AppIndex.API)
+                .addApi(Plus.API)
+                .build();
 
         // Views
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -102,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements
         mUserNameTextView = (TextView)headerView.findViewById(R.id.userName);
         mUserEmailTextView = (TextView)headerView.findViewById(R.id.userEmail);
         mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
+
+        mImageManager = ImageManager.create(this);
     }
 
     @Override
@@ -265,11 +273,25 @@ public class MainActivity extends AppCompatActivity implements
      * @param signedIn Boolean value stating if the user is currently authenticated.
      */
     private void updateUI(boolean signedIn) {
-        //TODO: Show/Hide UI widgets depending upon user authentication status.
         if (signedIn) {
             mUserNameTextView.setText(mSignInAccount.getDisplayName());
             mUserEmailTextView.setText(mSignInAccount.getEmail());
-            mUserPictureImageView.setImageURI(mSignInAccount.getPhotoUrl());
+            /*
+            mImageManager.loadImage(mUserPictureImageView, mSignInAccount.getPhotoUrl(),
+                    R.mipmap.ic_launcher);
+            */
+
+            //Uri photoURI = mSignInAccount.getPhotoUrl();
+            Uri photoURI = Uri.parse("https://lh5.googleusercontent.com/-ZxRLBL-aacA/AAAAAAAAAAI/AAAAAAAAACg/NekkWnnZeHE/photo.jpg");
+            Log.d(TAG, "User photo URI: " + photoURI.toString());
+
+            if (photoURI != null) {
+                mUserPictureImageView.setImageURI(photoURI);
+            }
+            else {
+                mUserPictureImageView.setImageResource(R.mipmap.ic_launcher);
+            }
+
         }
         else {
             mUserNameTextView.setText("");
