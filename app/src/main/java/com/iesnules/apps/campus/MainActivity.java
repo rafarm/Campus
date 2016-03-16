@@ -1,5 +1,6 @@
 package com.iesnules.apps.campus;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,11 +30,14 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.plus.Plus;
 
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements
     private static GoogleSignInAccount mSignInAccount;
 
     private GoogleApiClient mGoogleApiClient;
+    private boolean mSigningIn;
 
     private ImageManager mImageManager;
 
@@ -80,9 +86,11 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(AppIndex.API)
+                //.addApi(AppIndex.API)
                 .addApi(Plus.API)
                 .build();
+
+        mSigningIn = false;
 
         // Views
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -119,8 +127,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mGoogleApiClient.connect();
-        silentSignIn();
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+            silentSignIn();
+        }
+
+        /*
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
@@ -134,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements
                 Uri.parse("android-app://com.iesnules.apps.campus/http/host/path")
         );
         AppIndex.AppIndexApi.start(mGoogleApiClient, viewAction);
+        */
     }
 
     /*
@@ -241,13 +254,18 @@ public class MainActivity extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.getStatus());
         if (result.isSuccess()) {
+            mSigningIn = false;
             mSignInAccount = result.getSignInAccount();
             // Signed in successfully, show authenticated UI.
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
-            signIn();
+
+            if (!mSigningIn ||
+                    result.getStatus().getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
+                signIn();
+            }
         }
     }
 
@@ -255,8 +273,23 @@ public class MainActivity extends AppCompatActivity implements
      * Starts Google API sign in activity
      */
     private void signIn() {
+        mSigningIn = true;
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    /**
+     * Signs out of whichever user account.
+     */
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        finish();
+                    }
+                });
     }
 
     @Override
@@ -307,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onStop() {
         super.onStop();
 
+        /*
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
@@ -320,7 +354,11 @@ public class MainActivity extends AppCompatActivity implements
                 Uri.parse("android-app://com.iesnules.apps.campus/http/host/path")
         );
         AppIndex.AppIndexApi.end(mGoogleApiClient, viewAction);
-        mGoogleApiClient.disconnect();
+        */
+
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -330,14 +368,23 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // TODO: Show user profile activity
+            showUserProfile();
         } else if (id == R.id.nav_sign_out) {
-            // TODO: Sign out user session
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * Launches user profile editor Activity.
+     */
+    private void showUserProfile() {
+        Intent profileIntent = new Intent(this, ProfileActivity.class);
+        startActivity(profileIntent,
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
     }
 
     @Override
