@@ -18,5 +18,9 @@
         completions."
     </string> -->
 
-    <string name="signed_out">Signed Out</string>
+    <string name="nav_session">Session</string>
+    <string name="nav_sign_out">Sign Out</string>
+    <string name="nav_profile">Profile</string>
+
+
 </resources>
