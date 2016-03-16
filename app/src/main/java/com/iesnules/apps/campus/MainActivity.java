@@ -1,6 +1,7 @@
 package com.iesnules.apps.campus;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //.requestProfile()
+                .requestProfile()
+                .requestEmail()
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -276,27 +278,12 @@ public class MainActivity extends AppCompatActivity implements
         if (signedIn) {
             mUserNameTextView.setText(mSignInAccount.getDisplayName());
             mUserEmailTextView.setText(mSignInAccount.getEmail());
-            /*
-            mImageManager.loadImage(mUserPictureImageView, mSignInAccount.getPhotoUrl(),
-                    R.mipmap.ic_launcher);
-            */
-
-            //Uri photoURI = mSignInAccount.getPhotoUrl();
-            Uri photoURI = Uri.parse("https://lh5.googleusercontent.com/-ZxRLBL-aacA/AAAAAAAAAAI/AAAAAAAAACg/NekkWnnZeHE/photo.jpg");
-            Log.d(TAG, "User photo URI: " + photoURI.toString());
-
-            if (photoURI != null) {
-                mUserPictureImageView.setImageURI(photoURI);
-            }
-            else {
-                mUserPictureImageView.setImageResource(R.mipmap.ic_launcher);
-            }
-
+            mImageManager.loadImage(mUserPictureImageView, mSignInAccount.getPhotoUrl(), R.mipmap.ic_launcher);
         }
         else {
             mUserNameTextView.setText("");
             mUserEmailTextView.setText("");
-            mUserPictureImageView.setImageURI(null);
+            mImageManager.loadImage(mUserPictureImageView, null);
         }
     }
 
