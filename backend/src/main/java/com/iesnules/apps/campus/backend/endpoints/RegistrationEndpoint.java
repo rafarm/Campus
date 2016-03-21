@@ -4,12 +4,13 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/GcmEndpoints
 */
 
-package com.iesnules.apps.campus.backend;
+package com.iesnules.apps.campus.backend.endpoints;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.iesnules.apps.campus.backend.model.RegistrationRecord;
 
 import java.util.List;
 import java.util.logging.Logger;

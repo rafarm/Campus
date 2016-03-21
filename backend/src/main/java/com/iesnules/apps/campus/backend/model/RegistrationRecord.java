@@ -1,4 +1,4 @@
-package com.iesnules.apps.campus.backend;
+package com.iesnules.apps.campus.backend.model;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;

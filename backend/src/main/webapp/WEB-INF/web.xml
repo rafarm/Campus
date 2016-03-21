@@ -13,7 +13,8 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.iesnules.apps.campus.backend.RegistrationEndpoint, com.iesnules.apps.campus.backend.MessagingEndpoint</param-value>
+            <param-value>com.iesnules.apps.campus.backend.endpoints.RegistrationEndpoint,
+                com.iesnules.apps.campus.backend.endpoints.MessagingEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

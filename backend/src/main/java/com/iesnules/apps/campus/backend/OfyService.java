@@ -3,6 +3,8 @@ package com.iesnules.apps.campus.backend;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.iesnules.apps.campus.backend.model.RegistrationRecord;
+import com.iesnules.apps.campus.backend.model.User;
 
 /**
  * Objectify service wrapper so we can statically register our persistence classes
@@ -13,6 +15,7 @@ public class OfyService {
 
     static {
         ObjectifyService.register(RegistrationRecord.class);
+        ObjectifyService.register(User.class);
     }
 
     public static Objectify ofy() {
