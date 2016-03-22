@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
  * Created by rrubiom on 21/03/16.
  */
 @Entity
-public class User {
+public class UserRecord {
 
     @Id
     Long id;
@@ -16,7 +16,7 @@ public class User {
     @Index
     private String userId;
 
-    public User() {
+    public UserRecord() {
 
     }
 
