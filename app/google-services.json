@@ -11,10 +11,19 @@
         "client_id": "android:com.iesnules.apps.campus",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "com.iesnules.apps.campus"
+          "package_name": "com.iesnules.apps.campus",
+          "certificate_hash": []
         }
       },
       "oauth_client": [
+        {
+          "client_id": "964982265965-0p1lkveek1atirs0c1tuen3pgguhv23j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iesnules.apps.campus",
+            "certificate_hash": "2AF12C4FFE2474ECBCCEE58A5D28D281545FCDDF"
+          }
+        },
         {
           "client_id": "964982265965-sat93cn1p1p33hgh5jbqilfjbku1u2hd.apps.googleusercontent.com",
           "client_type": 1,

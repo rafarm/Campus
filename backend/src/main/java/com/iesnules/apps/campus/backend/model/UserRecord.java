@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * Created by rrubiom on 21/03/16.
+ * Created by Rafa Rubio on 21/03/16.
  */
 @Entity
 public class UserRecord {
@@ -16,8 +16,14 @@ public class UserRecord {
     @Index
     private String userId;
 
+    private String nickName;
+
     public UserRecord() {
 
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUserId() {
@@ -26,5 +32,13 @@ public class UserRecord {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

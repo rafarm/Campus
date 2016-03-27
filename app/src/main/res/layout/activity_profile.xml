@@ -9,4 +9,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.iesnules.apps.campus.ProfileActivity">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/nickNameEditText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:editable="false"
+        android:maxLength="30"
+        android:hint="@string/prof_nickname" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/prof_update"
+        android:id="@+id/updateButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onUpdate" />
 </RelativeLayout>

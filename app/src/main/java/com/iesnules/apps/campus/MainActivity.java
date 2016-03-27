@@ -1,10 +1,9 @@
 package com.iesnules.apps.campus;
 
-import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -24,8 +23,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,13 +30,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.plus.Plus;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.iesnules.apps.campus.backend.user.User;
+import com.iesnules.apps.campus.backend.user.model.UserRecord;
+import com.iesnules.apps.campus.model.UserProfile;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -50,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final int RC_SIGN_IN = 9001;
 
-    private static GoogleSignInAccount mSignInAccount;
+    //private static GoogleSignInAccount mSignInAccount;
+    private static UserProfile mUserProfile;
 
     private GoogleApiClient mGoogleApiClient;
     private boolean mSigningIn;
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestProfile()
                 .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -190,11 +195,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * SignInAccount getter.
-     * @return GoogleSignInAccount
+     * User profile getter.
+     * @return UserProfile
      */
-    public static GoogleSignInAccount getSignInAccount() {
-        return mSignInAccount;
+    public static UserProfile getUserProfile() {
+        return mUserProfile;
     }
 
     @Override
@@ -255,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.getStatus());
         if (result.isSuccess()) {
             mSigningIn = false;
-            mSignInAccount = result.getSignInAccount();
-            // Signed in successfully, show authenticated UI.
-            updateUI(true);
+
+            // Register user into the backend
+            new RegisterUserAsyncTask().execute(result.getSignInAccount());
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
@@ -309,9 +314,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void updateUI(boolean signedIn) {
         if (signedIn) {
-            mUserNameTextView.setText(mSignInAccount.getDisplayName());
-            mUserEmailTextView.setText(mSignInAccount.getEmail());
-            mImageManager.loadImage(mUserPictureImageView, mSignInAccount.getPhotoUrl(), R.mipmap.ic_launcher);
+            mUserNameTextView.setText(mUserProfile.getUserName());
+            mUserEmailTextView.setText(mUserProfile.getGoogleAccount().getEmail());
+            mImageManager.loadImage(mUserPictureImageView,
+                    mUserProfile.getGoogleAccount().getPhotoUrl(),
+                    R.mipmap.ic_launcher);
         }
         else {
             mUserNameTextView.setText("");
@@ -339,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onStop() {
         super.onStop();
-
         /*
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -394,6 +400,47 @@ public class MainActivity extends AppCompatActivity implements
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile>{
+
+        @Override
+        protected UserProfile doInBackground(GoogleSignInAccount... params) {
+            UserRecord record = null;
+            GoogleSignInAccount account = params[0];
+
+            User.Builder builder = new User.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(),
+                    null);
+
+            User service = builder.build();
+
+            try {
+                record = service.register(account.getIdToken()).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            UserProfile profile = null;
+
+            if (record != null && record.getUserId().equals(account.getId())) {
+                profile = new UserProfile(account, record);
+            }
+
+            return profile;
+        }
+
+        @Override
+        protected void onPostExecute(UserProfile profile) {
+            if (profile != null) { // User profile exists in backend store
+                mUserProfile = profile;
+                updateUI(true);
+            }
+            else { // Error confirming user identity in the backend -> sign in again...
+                // TODO: Avoid failing signing in loop...
+                signIn();
+            }
         }
     }
 
