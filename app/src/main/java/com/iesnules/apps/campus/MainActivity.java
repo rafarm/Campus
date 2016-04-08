@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -40,13 +45,17 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
+import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.model.UserProfile;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        GroupFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -61,9 +70,16 @@ public class MainActivity extends AppCompatActivity implements
 
     private ImageManager mImageManager;
 
+    private RelativeLayout mFragmentContainer;
+    private CoordinatorLayout mCoordinatorLayout;
+
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
     private ImageView mUserPictureImageView;
+    private BottomBar mBottomBar;
+
+    // Fragments
+    private GroupFragment mGroupFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements
                         .setAction("Action", null).show();
             }
         });
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -125,6 +143,41 @@ public class MainActivity extends AppCompatActivity implements
         mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
 
         mImageManager = ImageManager.create(this);
+
+        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        mFragmentContainer = (RelativeLayout)findViewById(R.id.fragment_container);
+
+        // Bottom bar...
+        mBottomBar = BottomBar.attach(mCoordinatorLayout, savedInstanceState);
+        mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
+                    case R.id.bottomBarItemGroups:
+                        replaceFragment(getGroupFragment());
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+
+            }
+        });
+    }
+
+    private GroupFragment getGroupFragment() {
+        if (mGroupFragment == null) {
+            mGroupFragment = new GroupFragment();
+        }
+
+        return mGroupFragment;
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
     @Override
@@ -401,6 +454,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile>{
