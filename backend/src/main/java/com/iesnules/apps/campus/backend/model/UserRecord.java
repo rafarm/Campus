@@ -18,6 +18,8 @@ public class UserRecord {
 
     private String nickName;
 
+    private String centerName;
+
     public UserRecord() {
 
     }
@@ -40,5 +42,13 @@ public class UserRecord {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
     }
 }
