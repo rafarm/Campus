@@ -255,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements
             transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
                     mTagCount++);
         }
+        mCurrentFragment = newFragment;
 
         transaction.commit();
     }
