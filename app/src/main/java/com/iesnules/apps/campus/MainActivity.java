@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mUserEmailTextView;
     private ImageView mUserPictureImageView;
     private BottomBar mBottomBar;
+    private NavigationView mDrawerNavigationView;
 
     private final int BOTTOMBAR_ITEM_RECENT_POSITION = 0;
     private final int BOTTOMBAR_ITEM_GROUPS_POSITION = 1;
@@ -147,10 +148,10 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mDrawerNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawerNavigationView.setNavigationItemSelectedListener(this);
 
-        View headerView = navigationView.getHeaderView(0);
+        View headerView = mDrawerNavigationView.getHeaderView(0);
         mUserNameTextView = (TextView)headerView.findViewById(R.id.userName);
         mUserEmailTextView = (TextView)headerView.findViewById(R.id.userEmail);
         mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
@@ -167,15 +168,19 @@ public class MainActivity extends AppCompatActivity implements
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
                     case R.id.bottomBarItemRecent:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
                         switchFragment(getRecentFragment());
                         break;
                     case R.id.bottomBarItemGroups:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
                         switchFragment(getGroupFragment());
                         break;
                     case R.id.bottomBarItemResources:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
                         switchFragment(getResourcesFragment());
                         break;
                     case R.id.bottomBarItemEvents:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
                         switchFragment(getEventsFragment());
                         break;
                 }
