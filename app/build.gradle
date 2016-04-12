@@ -5,7 +5,7 @@ android {
         debug {
             keyAlias 'debugKey'
             keyPassword 'debugKey'
-            storeFile file('/Users/rafa/AndroidStudioProjects/Campus/campus.jks')
+            storeFile file('/datos/usuarios/profesores/rrubiom/AndroidStudioProjects/Campus/campus.jks')
             storePassword 'campus'
         }
     }
@@ -46,6 +46,8 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
 }
+
+
 
 
 

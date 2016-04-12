@@ -77,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView mUserPictureImageView;
     private BottomBar mBottomBar;
 
+    private final int BOTTOMBAR_ITEM_RECENT_POSITION = 0;
+    private final int BOTTOMBAR_ITEM_GROUPS_POSITION = 1;
+    private final int BOTTOMBAR_ITEM_RESOURCES_POSITION = 2;
+    private final int BOTTOMBAR_ITEM_EVENTS_POSITION = 3;
+
     // Fragments
     private RecentFragment mRecentFragment;
     private GroupsFragment mGroupsFragment;
@@ -494,16 +499,30 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
-            showUserProfile();
-        } else if (id == R.id.nav_sign_out) {
-            signOut();
+        switch (item.getItemId()) {
+            case R.id.nav_profile:
+                showUserProfile();
+                break;
+            case R.id.nav_sign_out:
+                signOut();
+                break;
+            case R.id.bottomBarItemRecent:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_RECENT_POSITION, true);
+                break;
+            case R.id.bottomBarItemGroups:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_GROUPS_POSITION, true);
+                break;
+            case R.id.bottomBarItemResources:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_RESOURCES_POSITION, true);
+                break;
+            case R.id.bottomBarItemEvents:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_EVENTS_POSITION, true);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
