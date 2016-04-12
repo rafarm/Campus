@@ -6,6 +6,7 @@ android {
             keyAlias 'debugKey'
             keyPassword 'debugKey'
             storeFile file('/Users/rafa/AndroidStudioProjects/Campus/campus.jks')
+            storeFile file('/Users/robertoroigpedro/Campus/campus.jks')
             storePassword 'campus'
         }
     }
