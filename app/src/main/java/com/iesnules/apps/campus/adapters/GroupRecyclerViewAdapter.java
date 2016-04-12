@@ -1,4 +1,4 @@
-package com.iesnules.apps.campus;
+package com.iesnules.apps.campus.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.iesnules.apps.campus.GroupFragment.OnListFragmentInteractionListener;
+import com.iesnules.apps.campus.R;
+import com.iesnules.apps.campus.fragments.GroupsFragment.OnListFragmentInteractionListener;
 import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_group, parent, false);
+                .inflate(R.layout.fragment_groups, parent, false);
         return new ViewHolder(view);
     }
 

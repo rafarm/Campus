@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.iesnules.apps.campus.GroupFragment"
-    tools:listitem="@layout/fragment_group" />
+    tools:context=".fragments.GroupsFragment"
+    tools:listitem="@layout/fragment_groups" />
 
 

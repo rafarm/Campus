@@ -1,4 +1,4 @@
-package com.iesnules.apps.campus;
+package com.iesnules.apps.campus.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.iesnules.apps.campus.adapters.GroupRecyclerViewAdapter;
+import com.iesnules.apps.campus.R;
 import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -21,7 +21,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class GroupFragment extends Fragment {
+public class GroupsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -33,13 +33,13 @@ public class GroupFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public GroupFragment() {
+    public GroupsFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static GroupFragment newInstance(int columnCount) {
-        GroupFragment fragment = new GroupFragment();
+    public static GroupsFragment newInstance(int columnCount) {
+        GroupsFragment fragment = new GroupsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -58,7 +58,7 @@ public class GroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_groups_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
