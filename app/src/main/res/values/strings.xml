@@ -25,6 +25,7 @@
     <string name="prof_nickname">Nickname</string>
     <string name="prof_centername">Center Name</string>
     <string name="prof_update">Update</string>
+    <string name="prof_description">Description</string>
 
     <string name="nav_session">Session</string>
     <string name="nav_sign_out">Sign Out</string>

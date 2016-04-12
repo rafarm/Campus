@@ -20,6 +20,8 @@ public class UserRecord {
 
     private String centerName;
 
+    private String description;
+
     public UserRecord() {
 
     }
@@ -50,5 +52,13 @@ public class UserRecord {
 
     public void setCenterName(String centerName) {
         this.centerName = centerName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
