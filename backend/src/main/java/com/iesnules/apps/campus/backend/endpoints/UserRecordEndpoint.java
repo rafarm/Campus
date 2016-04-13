@@ -13,9 +13,11 @@ import com.google.appengine.repackaged.com.google.api.client.googleapis.auth.oau
 import com.google.appengine.repackaged.com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.repackaged.com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.appengine.repackaged.com.google.api.client.json.jackson.JacksonFactory;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 import com.iesnules.apps.campus.backend.Constants;
+import com.iesnules.apps.campus.backend.model.GoogleUserRecord;
 import com.iesnules.apps.campus.backend.model.UserRecord;
 
 import java.io.IOException;
@@ -62,7 +64,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class UserRecordEndpoint {
 
     static {
-         ObjectifyService.register(UserRecord.class);
+        ObjectifyService.register(UserRecord.class);
+        ObjectifyService.register(GoogleUserRecord.class);
     }
 
     private static final Logger logger = Logger.getLogger(UserRecordEndpoint.class.getName());
@@ -186,22 +189,34 @@ public class UserRecordEndpoint {
 
         UserRecord record = null;
 
-        // Only authenticated user should change her own profile data...
-        // TODO: It should be done that way, but currently User.getUserId() returns null...
-        if (user != null /*&& userRecord.getUserId().equals(user.getUserId())*/) {
-            checkExists(id);
-            ofy().save().entity(userRecord).now();
-            logger.info("Updated UserRecord: " + userRecord);
-
-            record = ofy().load().entity(userRecord).now();
+        if (userRecord.getId() != id) {
+            throw new NotFoundException("Id's mismatch.");
         }
         else {
-            //if (user == null) {
-                throw new OAuthRequestException("Unauthorized access: User not authenticated.");
-            //}
-            //else {
-            //    throw new OAuthRequestException("Unauthorized access: User is not profile owner");
-            //}
+            // Retrieve User id...
+            GoogleUserRecord gRecord = new GoogleUserRecord();
+            gRecord.setUser(user);
+            Key gRecordKey = ofy().save().entity(gRecord).now();
+            GoogleUserRecord storedRecord = (GoogleUserRecord)ofy().load().key(gRecordKey).now();
+            String userId = storedRecord.getUser().getUserId();
+
+            // Only authenticated user should change her own profile data...
+            // TODO: It should be done that way, but currently User.getUserId() returns null...
+            if (user != null && userRecord.getUserId().equals(userId)) {
+                checkExists(id);
+                ofy().save().entity(userRecord).now();
+                logger.info("Updated UserRecord: " + userRecord);
+
+                record = ofy().load().entity(userRecord).now();
+            }
+            else {
+                if (user == null) {
+                    throw new OAuthRequestException("Unauthorized access: User not authenticated.");
+                }
+                else {
+                    throw new OAuthRequestException("Unauthorized access: User is not profile owner");
+                }
+            }
         }
 
         return record;
