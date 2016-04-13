@@ -199,6 +199,7 @@ public class UserRecordEndpoint {
             Key gRecordKey = ofy().save().entity(gRecord).now();
             GoogleUserRecord storedRecord = (GoogleUserRecord)ofy().load().key(gRecordKey).now();
             String userId = storedRecord.getUser().getUserId();
+            ofy().delete().entities(storedRecord).now();
 
             // Only authenticated user should change her own profile data...
             // TODO: It should be done that way, but currently User.getUserId() returns null...
