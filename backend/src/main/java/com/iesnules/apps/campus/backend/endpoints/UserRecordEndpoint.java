@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Named;
 
@@ -88,7 +89,7 @@ public class UserRecordEndpoint {
         UserRecord userRecord = null;
 
         if (user == null) {
-            throw new OAuthRequestException("Unauthorized access.");
+            throw new OAuthRequestException("Unauthorized request.");
         }
         else {
             userRecord = ofy().load().type(UserRecord.class).id(id).now();
@@ -108,15 +109,25 @@ public class UserRecordEndpoint {
      * @throws NotFoundException if there is no {@code UserRecord} with the provided userId.
      */
     @ApiMethod(
-            name = "find",
-            path = "find/{userId}",
+            name = "search",
+            path = "user.search/{userId}",
             httpMethod = ApiMethod.HttpMethod.GET)
-    public UserRecord find(@Named("userId") String userId) throws NotFoundException {
+    public UserRecord search(@Nonnull @Named("userId") String userId, User user)
+            throws NotFoundException, OAuthRequestException {
         logger.info("Getting UserRecord with userId: " + userId);
-        UserRecord userRecord = ofy().load().type(UserRecord.class).filter("userId", userId).first().now();
-        if (userRecord == null) {
-            throw new NotFoundException("Could not find UserRecord with userId: " + userId);
+
+        UserRecord userRecord = null;
+
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized request.");
         }
+        else {
+            userRecord = ofy().load().type(UserRecord.class).filter("userId", userId).first().now();
+            if (userRecord == null) {
+                throw new NotFoundException("Could not find UserRecord with userId: " + userId);
+            }
+        }
+
         return userRecord;
     }
 
@@ -129,16 +140,18 @@ public class UserRecordEndpoint {
      */
     @ApiMethod(
             name = "register",
-            path = "reg/{authToken}",
+            path = "user.register/{authToken}",
             httpMethod = ApiMethod.HttpMethod.GET)
-    public UserRecord register(@Named("authToken") String authToken) throws GeneralSecurityException {
+    public UserRecord register(@Nonnull @Named("authToken") String authToken)
+            throws GeneralSecurityException {
+
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
                 new JacksonFactory())
                 .setAudience(Arrays.asList(Constants.WEB_CLIENT_ID))
                 .setIssuer("https://accounts.google.com")
                 .build();
 
-        GoogleIdToken idToken = null;
+        GoogleIdToken idToken;
         UserRecord record =  null;
 
         try {
@@ -153,8 +166,9 @@ public class UserRecordEndpoint {
             String userId = idToken.getPayload().getSubject();
 
             try {
-                record = find(userId);
-            } catch (NotFoundException e) {
+                record = ofy().load().type(UserRecord.class)
+                        .filter("userId", userId).first().safe();
+            } catch (com.googlecode.objectify.NotFoundException e) {
                 record = new UserRecord();
                 record.setUserId(userId);
 
@@ -169,7 +183,7 @@ public class UserRecordEndpoint {
     /**
      * Updates an existing {@code UserRecord}.
      *
-     * @param id         the ID of the entity to be updated
+     * //@param id         the ID of the entity to be updated
      * @param userRecord the desired state of the entity
      * @return the updated version of the entity
      * @throws NotFoundException if the {@code id} does not correspond to an existing
@@ -179,29 +193,29 @@ public class UserRecordEndpoint {
      */
     @ApiMethod(
             name = "update",
-            path = "user/{id}",
+            path = "user",
             httpMethod = ApiMethod.HttpMethod.PUT)
-    public UserRecord update(@Named("id") Long id, UserRecord userRecord, User user)
+    public UserRecord update(UserRecord userRecord, User user)
             throws NotFoundException, OAuthRequestException {
 
         UserRecord record = null;
 
         if (user == null) {
-            throw new OAuthRequestException("Unauthorized access: User not authenticated.");
+            throw new OAuthRequestException("Unauthorized access.");
         }
         else {
             // Only authenticated user should change her own profile data...
             // TODO: It should be done that way, but currently User.getUserId() returns null...
-            if (userRecord.getId().equals(id)) {
-                checkExists(id);
+            //if (userRecord.getId().equals(id)) {
+                checkExists(userRecord.getId());
                 ofy().save().entity(userRecord).now();
                 logger.info("Updated UserRecord: " + userRecord);
 
                 record = ofy().load().entity(userRecord).now();
-            }
-            else {
-                throw new OAuthRequestException("Unauthorized access: User is not profile owner");
-            }
+            //}
+            //else {
+            //    throw new OAuthRequestException("Unauthorized access: User is not profile owner");
+            //}
         }
 
         return record;
@@ -218,10 +232,16 @@ public class UserRecordEndpoint {
             name = "remove",
             path = "user/{id}",
             httpMethod = ApiMethod.HttpMethod.DELETE)
-    public void remove(@Named("id") Long id) throws NotFoundException {
-        checkExists(id);
-        ofy().delete().type(UserRecord.class).id(id).now();
-        logger.info("Deleted UserRecord with ID: " + id);
+    public void remove(@Named("id") Long id, User user) throws NotFoundException,
+            OAuthRequestException {
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
+        }
+        else {
+            checkExists(id);
+            ofy().delete().type(UserRecord.class).id(id).now();
+            logger.info("Deleted UserRecord with ID: " + id);
+        }
     }
 
     /**
@@ -235,18 +255,34 @@ public class UserRecordEndpoint {
             name = "list",
             path = "user",
             httpMethod = ApiMethod.HttpMethod.GET)
-    public CollectionResponse<UserRecord> list(@Nullable @Named("cursor") String cursor, @Nullable @Named("limit") Integer limit) {
-        limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
-        Query<UserRecord> query = ofy().load().type(UserRecord.class).limit(limit);
-        if (cursor != null) {
-            query = query.startAt(Cursor.fromWebSafeString(cursor));
+    public CollectionResponse<UserRecord> list(@Nullable @Named("cursor") String cursor,
+                                               @Nullable @Named("limit") Integer limit,
+                                               User user) throws OAuthRequestException {
+        CollectionResponse<UserRecord> response = null;
+
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
         }
-        QueryResultIterator<UserRecord> queryIterator = query.iterator();
-        List<UserRecord> userRecordList = new ArrayList<UserRecord>(limit);
-        while (queryIterator.hasNext()) {
-            userRecordList.add(queryIterator.next());
+        else {
+            limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+            List<UserRecord> userRecordList = new ArrayList<UserRecord>(limit);
+            Query<UserRecord> query = ofy().load().type(UserRecord.class).limit(limit);
+            if (cursor != null) {
+                query = query.startAt(Cursor.fromWebSafeString(cursor));
+            }
+            QueryResultIterator<UserRecord> queryIterator = query.iterator();
+
+            while (queryIterator.hasNext()) {
+                userRecordList.add(queryIterator.next());
+            }
+
+            response = CollectionResponse.<UserRecord>builder()
+                    .setItems(userRecordList)
+                    .setNextPageToken(queryIterator.getCursor().toWebSafeString())
+                    .build();
         }
-        return CollectionResponse.<UserRecord>builder().setItems(userRecordList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
+
+        return response;
     }
 
     private void checkExists(Long id) throws NotFoundException {

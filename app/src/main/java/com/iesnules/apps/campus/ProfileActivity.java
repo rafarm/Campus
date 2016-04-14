@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             UserRecord record = getUpdatedRecord();
             try {
-                record = service.update(record.getId(), record).execute();
+                record = service.update(record).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
