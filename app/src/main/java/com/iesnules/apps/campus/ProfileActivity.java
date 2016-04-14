@@ -70,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected UserRecord doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
-                    "server:client_id:" + getString(R.string.server_client_id));
+                    getString(R.string.server_credential));
             credential.setSelectedAccountName(mProfile.getUserAccountName());
 
             User.Builder builder = new User.Builder(AndroidHttp.newCompatibleTransport(),
