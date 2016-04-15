@@ -74,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected UserRecord doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
-                    "server:client_id:" + getString(R.string.server_client_id));
+                    getString(R.string.server_credential));
             credential.setSelectedAccountName(mProfile.getUserAccountName());
 
             User.Builder builder = new User.Builder(AndroidHttp.newCompatibleTransport(),
@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             UserRecord record = getUpdatedRecord();
             try {
-                record = service.update(record.getId(), record).execute();
+                record = service.update(record).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
