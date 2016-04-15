@@ -1,5 +1,6 @@
 package com.iesnules.apps.campus.backend.model;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -17,6 +18,8 @@ public class UserRecord {
     private String userId;
 
     private String nickName;
+
+    private String centerName;
 
     public UserRecord() {
 
@@ -40,5 +43,13 @@ public class UserRecord {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
     }
 }

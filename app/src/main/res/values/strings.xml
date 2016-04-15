@@ -1,5 +1,6 @@
 <resources>
     <string name="server_client_id">964982265965-rg07s19fedsnm19cg5p0b8th0923a3fe.apps.googleusercontent.com</string>
+    <string name="server_credential">server:client_id:964982265965-rg07s19fedsnm19cg5p0b8th0923a3fe.apps.googleusercontent.com</string>
 
     <string name="app_name">Campus</string>
     <string name="action_settings">Settings</string>
@@ -23,11 +24,17 @@
 
     <!-- Strings related to profile -->
     <string name="prof_nickname">Nickname</string>
+    <string name="prof_centername">Center Name</string>
     <string name="prof_update">Update</string>
 
     <string name="nav_session">Session</string>
     <string name="nav_sign_out">Sign Out</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_groups">Groups</string>
+    <string name="nav_events">Events</string>
+    <string name="nav_recent">Recent</string>
+    <string name="nav_resources">Resources</string>
+
     <string name="title_activity_profile">Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->

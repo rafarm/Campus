@@ -24,6 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     // UI
     private EditText mNickNameEditText;
+    private EditText mCenterNameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +34,14 @@ public class ProfileActivity extends AppCompatActivity {
         mProfile = MainActivity.getUserProfile();
 
         mNickNameEditText = (EditText)findViewById(R.id.nickNameEditText);
+        mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
 
         populateUI();
     }
 
     private void populateUI() {
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
+        mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
     }
 
     public void onUpdate(View view) {
@@ -60,14 +63,14 @@ public class ProfileActivity extends AppCompatActivity {
         private UserRecord getUpdatedRecord() {
             UserRecord updated = mProfile.getUserRecord().clone();
             updated.setNickName(mNickNameEditText.getText().toString());
-
+            updated.setCenterName(mCenterNameEditText.getText().toString());
             return updated;
         }
 
         @Override
         protected UserRecord doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
-                    "server:client_id:" + getString(R.string.server_client_id));
+                    getString(R.string.server_credential));
             credential.setSelectedAccountName(mProfile.getUserAccountName());
 
             User.Builder builder = new User.Builder(AndroidHttp.newCompatibleTransport(),
@@ -76,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             UserRecord record = getUpdatedRecord();
             try {
-                record = service.update(record.getId(), record).execute();
+                record = service.update(record).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }

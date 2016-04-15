@@ -1,15 +1,15 @@
 package com.iesnules.apps.campus;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,13 +40,21 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
+import com.iesnules.apps.campus.dummy.DummyContent;
+import com.iesnules.apps.campus.fragments.EventsFragment;
+import com.iesnules.apps.campus.fragments.GroupsFragment;
+import com.iesnules.apps.campus.fragments.RecentFragment;
+import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        GroupsFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -61,9 +69,31 @@ public class MainActivity extends AppCompatActivity implements
 
     private ImageManager mImageManager;
 
+    //private RelativeLayout mFragmentContainer;
+    private CoordinatorLayout mCoordinatorLayout;
+
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
     private ImageView mUserPictureImageView;
+    private BottomBar mBottomBar;
+    private NavigationView mDrawerNavigationView;
+
+    private final int BOTTOMBAR_ITEM_RECENT_POSITION = 0;
+    private final int BOTTOMBAR_ITEM_GROUPS_POSITION = 1;
+    private final int BOTTOMBAR_ITEM_RESOURCES_POSITION = 2;
+    private final int BOTTOMBAR_ITEM_EVENTS_POSITION = 3;
+
+    // Fragments
+    private RecentFragment mRecentFragment;
+    private GroupsFragment mGroupsFragment;
+    private ResourcesFragment mResourcesFragment;
+    private EventsFragment mEventsFragment;
+    //private Stack<Fragment> mRecentFragmentStack;
+    //private Stack<Fragment> mGroupsFragmentStack;
+    //private Stack<Fragment> mResourcesFragmentStack;
+    //private Stack<Fragment> mEventsFragmentStack;
+    private Fragment mCurrentFragment;
+    private int mTagCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements
         // Views
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO: Execute fragment when pressed
+
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements
                         .setAction("Action", null).show();
             }
         });
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -116,15 +148,121 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mDrawerNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawerNavigationView.setNavigationItemSelectedListener(this);
 
-        View headerView = navigationView.getHeaderView(0);
+        View headerView = mDrawerNavigationView.getHeaderView(0);
         mUserNameTextView = (TextView)headerView.findViewById(R.id.userName);
         mUserEmailTextView = (TextView)headerView.findViewById(R.id.userEmail);
         mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
 
         mImageManager = ImageManager.create(this);
+
+        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        //mFragmentContainer = (RelativeLayout)findViewById(R.id.fragment_container);
+
+        // Bottom bar...
+        mBottomBar = BottomBar.attach(mCoordinatorLayout, savedInstanceState);
+        mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
+                    case R.id.bottomBarItemRecent:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
+                        switchFragment(getRecentFragment());
+                        break;
+                    case R.id.bottomBarItemGroups:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
+                        switchFragment(getGroupFragment());
+                        break;
+                    case R.id.bottomBarItemResources:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
+                        switchFragment(getResourcesFragment());
+                        break;
+                    case R.id.bottomBarItemEvents:
+                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
+                        switchFragment(getEventsFragment());
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+
+            }
+        });
+    }
+
+    /**
+     * Lazily create recent fragment.
+     * @return RecentFragment
+     */
+    private RecentFragment getRecentFragment() {
+        if (mRecentFragment == null) {
+            mRecentFragment = RecentFragment.newInstance("Recent", "Activities");
+        }
+
+        return mRecentFragment;
+    }
+
+    /**
+     * Lazily create groups fragment.
+     * @return GroupsFragment
+     */
+    private GroupsFragment getGroupFragment() {
+        if (mGroupsFragment == null) {
+            mGroupsFragment = GroupsFragment.newInstance(1);
+        }
+
+        return mGroupsFragment;
+    }
+
+    /**
+     * Lazily create resources fragment.
+     * @return ResourcesFragment
+     */
+    private ResourcesFragment getResourcesFragment() {
+        if (mResourcesFragment == null) {
+            mResourcesFragment = ResourcesFragment.newInstance("Resources", "List");
+        }
+
+        return mResourcesFragment;
+    }
+
+    /**
+     * Lazily create events fragment.
+     * @return EventsFragment
+     */
+    private EventsFragment getEventsFragment() {
+        if (mEventsFragment == null) {
+            mEventsFragment = EventsFragment.newInstance("Events", "List");
+        }
+
+        return mEventsFragment;
+    }
+
+    /**
+     * Switch to a new fragment stack.
+     * @param newFragment
+     */
+    private void switchFragment(Fragment newFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (mCurrentFragment != null) {
+            transaction.detach(mCurrentFragment);
+        }
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(newFragment.getTag());
+        if (fragment != null) {
+            transaction.attach(fragment);
+        }
+        else {
+            transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
+                    mTagCount++);
+        }
+        mCurrentFragment = newFragment;
+
+        transaction.commit();
     }
 
     @Override
@@ -367,16 +505,30 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
-            showUserProfile();
-        } else if (id == R.id.nav_sign_out) {
-            signOut();
+        switch (item.getItemId()) {
+            case R.id.nav_profile:
+                showUserProfile();
+                break;
+            case R.id.nav_sign_out:
+                signOut();
+                break;
+            case R.id.bottomBarItemRecent:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_RECENT_POSITION, true);
+                break;
+            case R.id.bottomBarItemGroups:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_GROUPS_POSITION, true);
+                break;
+            case R.id.bottomBarItemResources:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_RESOURCES_POSITION, true);
+                break;
+            case R.id.bottomBarItemEvents:
+                mBottomBar.selectTabAtPosition(BOTTOMBAR_ITEM_EVENTS_POSITION, true);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -401,6 +553,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile>{

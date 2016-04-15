@@ -9,11 +9,27 @@
         android:icon="@drawable/ic_menu_sign_out"
         android:title="@string/nav_sign_out" />
 
-    <!--
-    <group android:checkableBehavior="single">
 
+    <group android:id="@+id/drawer_menu_actions" android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomBarItemRecent"
+            android:icon="@drawable/ic_menu_recent"
+            android:title="@string/nav_recent" />
+        <item
+            android:id="@+id/bottomBarItemGroups"
+            android:icon="@drawable/ic_menu_group"
+            android:title="@string/nav_groups" />
+        <item
+            android:id="@+id/bottomBarItemResources"
+            android:icon="@drawable/ic_menu_resource"
+            android:title="@string/nav_resources" />
+        <item
+            android:id="@+id/bottomBarItemEvents"
+            android:icon="@drawable/ic_menu_event"
+            android:title="@string/nav_events" />
     </group>
 
+    <!--
     <item android:title="@string/nav_session">
         <menu>
 
