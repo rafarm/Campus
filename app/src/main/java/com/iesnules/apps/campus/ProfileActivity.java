@@ -72,6 +72,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
         protected UserRecord doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
                     getString(R.string.server_credential));

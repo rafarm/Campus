@@ -54,4 +54,5 @@
         android:hint="@string/prof_description"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/centerNameEditText" />
+
 </RelativeLayout>
