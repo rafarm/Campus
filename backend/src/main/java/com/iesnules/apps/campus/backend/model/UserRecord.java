@@ -21,6 +21,8 @@ public class UserRecord {
 
     private String centerName;
 
+    private String studiesType;
+
     public UserRecord() {
 
     }
@@ -52,4 +54,8 @@ public class UserRecord {
     public void setCenterName(String centerName) {
         this.centerName = centerName;
     }
+
+    public String getStudiesType() { return studiesType; }
+
+    public void setStudiesType(String studiesType) { this.studiesType = studiesType; }
 }
