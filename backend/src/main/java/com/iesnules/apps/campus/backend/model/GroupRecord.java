@@ -15,20 +15,18 @@ public class GroupRecord {
     Key<UserRecord> creator;
 
     @Index
-    private String nameGroup;
+    private String groupName;
 
     private String description;
 
-    private String groupUsers;
+    private String creationDate;
 
     public GroupRecord() {}
 
-    public String getNameGroup() {
-        return nameGroup;
-    }
+    public String getGroupName() {return groupName;}
 
-    public void setNameGroup(String nameGroup) {
-        this.nameGroup = nameGroup;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
 
@@ -43,11 +41,7 @@ public class GroupRecord {
 
 
 
-    public String getGroupUsers() {
-        return groupUsers;
-    }
+    public String getCreationDate() {return creationDate;  }
 
-    public void setGroupUsers(String groupUsers) {
-        this.groupUsers = groupUsers;
-    }
+    public void setCreationDate(String creationDate) { this.creationDate = creationDate; }
 }
