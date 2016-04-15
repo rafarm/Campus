@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements
     //private Stack<Fragment> mEventsFragmentStack;
     private Fragment mCurrentFragment;
     private int mTagCount = 0;
+    private Fragment newGroupFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,21 +130,21 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
 
         mSigningIn = false;
-
+        //newGroupFragment = (Fragment)findViewById()
         // Views
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                DialogFragment dFragment = new DialogFragment();
+                // Show DialogFragment
+                dFragment.show(transaction, "Dialog Fragment");
             }
         });
-        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -264,6 +268,10 @@ public class MainActivity extends AppCompatActivity implements
 
         transaction.commit();
     }
+
+
+    //New group fragment start
+
 
     @Override
     protected void onStart() {
