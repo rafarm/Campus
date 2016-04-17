@@ -3,17 +3,24 @@ package com.iesnules.apps.campus.backend.endpoints;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.google.api.server.spi.response.CollectionResponse;
 import com.google.api.server.spi.response.NotFoundException;
+import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.Query;
 import com.iesnules.apps.campus.backend.Constants;
 import com.iesnules.apps.campus.backend.model.GroupRecord;
 import com.iesnules.apps.campus.backend.model.UserRecord;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -43,9 +50,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
         },
         audiences = {Constants.ANDROID_AUDIENCE}
 )
-public class GroupRecordEndpoint{
+public class GroupRecordEndpoint {
 
-    static { ObjectifyService.register(GroupRecord.class);}
+    static { ObjectifyService.register(GroupRecord.class); }
 
     private static final Logger logger = Logger.getLogger(GroupRecordEndpoint.class.getName());
 
@@ -56,17 +63,19 @@ public class GroupRecordEndpoint{
             path = "group.create/",
             httpMethod = ApiMethod.HttpMethod.GET)
     public GroupRecord create(GroupRecord groupRecord, User user)
-            throws OAuthRequestException {
+            throws OAuthRequestException, IllegalArgumentException {
 
         GroupRecord record = null;
 
         if (user == null) {
             throw new OAuthRequestException("Unauthorized access.");
         }
+        else if (groupRecord.getId() != null) {
+            throw new IllegalArgumentException("Group already created.");
+        }
         else {
-
             ofy().save().entity(groupRecord).now();
-            logger.info("Updated GroupRecord: " + groupRecord);
+            logger.info("Created GroupRecord: " + groupRecord);
 
             record = ofy().load().entity(groupRecord).now();
 
@@ -88,14 +97,6 @@ public class GroupRecordEndpoint{
             checkExists(id);
             ofy().delete().type(GroupRecord.class).id(id).now();
             logger.info("Deleted GroupRecord with ID: " + id);
-        }
-    }
-
-    private void checkExists(Long id) throws NotFoundException {
-        try {
-            ofy().load().type(UserRecord.class).id(id).safe();
-        } catch (com.googlecode.objectify.NotFoundException e) {
-            throw new NotFoundException("Could not find UserRecord with ID: " + id);
         }
     }
 
@@ -122,6 +123,52 @@ public class GroupRecordEndpoint{
         return groupRecord;
     }
 
+    /**
+     * List all entities.
+     *
+     * @param cursor used for pagination to determine which page to return
+     * @param limit  the maximum number of entries to return
+     * @return a response that encapsulates the result list and the next page token/cursor
+     */
+    @ApiMethod(
+            name = "list",
+            path = "group",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public CollectionResponse<GroupRecord> list(@Nullable @Named("cursor") String cursor,
+                                               @Nullable @Named("limit") Integer limit,
+                                               User user) throws OAuthRequestException {
+        CollectionResponse<GroupRecord> response = null;
 
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
+        }
+        else {
+            limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+            List<GroupRecord> groupRecordList = new ArrayList<GroupRecord>(limit);
+            Query<GroupRecord> query = ofy().load().type(GroupRecord.class).limit(limit);
+            if (cursor != null) {
+                query = query.startAt(Cursor.fromWebSafeString(cursor));
+            }
+            QueryResultIterator<GroupRecord> queryIterator = query.iterator();
 
+            while (queryIterator.hasNext()) {
+                groupRecordList.add(queryIterator.next());
+            }
+
+            response = CollectionResponse.<GroupRecord>builder()
+                    .setItems(groupRecordList)
+                    .setNextPageToken(queryIterator.getCursor().toWebSafeString())
+                    .build();
+        }
+
+        return response;
+    }
+
+    private void checkExists(Long id) throws NotFoundException {
+        try {
+            ofy().load().type(UserRecord.class).id(id).safe();
+        } catch (com.googlecode.objectify.NotFoundException e) {
+            throw new NotFoundException("Could not find UserRecord with ID: " + id);
+        }
+    }
 }

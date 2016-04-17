@@ -65,7 +65,11 @@ public class UserRecord {
         this.description = description;
     }
 
-    public String getStudiesType() { return studiesType; }
+    public String getStudiesType() {
+        return studiesType;
+    }
 
-    public void setStudiesType(String studiesType) { this.studiesType = studiesType; }
+    public void setStudiesType(String studiesType) {
+        this.studiesType = studiesType;
+    }
 }

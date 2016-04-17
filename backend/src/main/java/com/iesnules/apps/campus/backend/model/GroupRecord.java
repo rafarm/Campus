@@ -4,6 +4,9 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.OnSave;
+
+import java.util.Date;
 
 /**
  * Created by robertoroig & andrestendero on 12/04/16.
@@ -19,17 +22,21 @@ public class GroupRecord {
 
     private String description;
 
-    private String creationDate;
+    private Date creationDate;
 
     public GroupRecord() {}
 
-    public String getGroupName() {return groupName;}
+    public Long getId() {
+        return id;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
-
 
     public String getDescription() {
         return description;
@@ -39,9 +46,18 @@ public class GroupRecord {
         this.description = description;
     }
 
+    // This attribute will be readonly
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
-
-    public String getCreationDate() {return creationDate;  }
-
-    public void setCreationDate(String creationDate) { this.creationDate = creationDate; }
+    /**
+     * Set creation date on first save.
+     */
+    @OnSave
+    void setCreationDate() {
+        if (creationDate == null) {
+            creationDate = new Date();
+        }
+    }
 }

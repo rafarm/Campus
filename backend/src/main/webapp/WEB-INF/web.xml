@@ -15,7 +15,8 @@
             <param-name>services</param-name>
             <param-value>com.iesnules.apps.campus.backend.endpoints.RegistrationEndpoint,
                 com.iesnules.apps.campus.backend.endpoints.MessagingEndpoint,
-                com.iesnules.apps.campus.backend.endpoints.UserRecordEndpoint</param-value>
+                com.iesnules.apps.campus.backend.endpoints.UserRecordEndpoint,
+                com.iesnules.apps.campus.backend.endpoints.GroupRecordEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

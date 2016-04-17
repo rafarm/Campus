@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -16,7 +15,6 @@ import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.model.UserProfile;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ProfileActivity extends AppCompatActivity {
 
