@@ -23,6 +23,8 @@ public class UserRecord {
 
     private String description;
 
+    private String studiesType;
+
     public UserRecord() {
 
     }
@@ -62,4 +64,8 @@ public class UserRecord {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getStudiesType() { return studiesType; }
+
+    public void setStudiesType(String studiesType) { this.studiesType = studiesType; }
 }

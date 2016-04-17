@@ -34,6 +34,18 @@
         android:layout_below="@+id/nickNameEditText"
         android:layout_alignParentStart="true" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions"
+        android:ems="10"
+        android:id="@+id/StudiesTypeEditText"
+        android:editable="false"
+        android:maxLength="30"
+        android:hint="@string/prof_studiesType"
+        android:layout_below="@+id/centerNameEditText"
+        android:layout_alignParentStart="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

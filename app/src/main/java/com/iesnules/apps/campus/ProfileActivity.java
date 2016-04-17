@@ -26,6 +26,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mNickNameEditText;
     private EditText mCenterNameEditText;
     private EditText mDescriptionEdiText;
+    private EditText mStudiesTypeEditText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         mNickNameEditText = (EditText)findViewById(R.id.nickNameEditText);
         mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
         mDescriptionEdiText = (EditText)findViewById(R.id.descriptionEditText);
+        mStudiesTypeEditText = (EditText)findViewById(R.id.StudiesTypeEditText);
 
         populateUI();
     }
@@ -45,6 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
+        mStudiesTypeEditText.setText(mProfile.getUserRecord().getStudiesType());
     }
 
     public void onUpdate(View view) {
@@ -68,13 +72,8 @@ public class ProfileActivity extends AppCompatActivity {
             updated.setNickName(mNickNameEditText.getText().toString());
             updated.setCenterName(mCenterNameEditText.getText().toString());
             updated.setDescription(mDescriptionEdiText.getText().toString());
+            updated.setStudiesType(mStudiesTypeEditText.getText().toString());
             return updated;
-        }
-
-        @Override
-        protected void onPreExecute() {
-
-
         }
 
         @Override
