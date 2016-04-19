@@ -39,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
         mDescriptionEdiText = (EditText)findViewById(R.id.descriptionEditText);
         mStudiesTypeEditText = (EditText)findViewById(R.id.StudiesTypeEditText);
-        mTwitterEditText = (EditText)findViewById(R.id.TwitterEditText);
+        mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
 
         populateUI();
     }
