@@ -38,11 +38,12 @@ public class ProfileActivity extends AppCompatActivity {
         mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
         mDescriptionEdiText = (EditText)findViewById(R.id.descriptionEditText);
         mStudiesTypeEditText = (EditText)findViewById(R.id.StudiesTypeEditText);
-
+        mgoogleNametextView =  (EditText)findViewById(R.id.GoogleNameTextView);
         populateUI();
     }
 
     private void populateUI() {
+        mgoogleNametextView = setText(mProfile.getGoogleAccount().getgoogleNametextView);
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
@@ -71,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             updated.setCenterName(mCenterNameEditText.getText().toString());
             updated.setDescription(mDescriptionEdiText.getText().toString());
             updated.setStudiesType(mStudiesTypeEditText.getText().toString());
+            updated.setgoogleName(mgoogleNameTextView.getText().toString());
             return updated;
         }
 
