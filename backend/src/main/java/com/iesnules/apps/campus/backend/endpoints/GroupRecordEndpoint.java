@@ -9,7 +9,10 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 import com.iesnules.apps.campus.backend.Constants;
 import com.iesnules.apps.campus.backend.model.GroupRecord;
@@ -170,5 +173,14 @@ public class GroupRecordEndpoint {
         } catch (com.googlecode.objectify.NotFoundException e) {
             throw new NotFoundException("Could not find UserRecord with ID: " + id);
         }
+    }
+
+    @Entity
+    public class Group {
+        @Id String user;
+        List<Key<User>> subordinates = new ArrayList<Key<User>>();
+
+        Iterable<User> managers = ofy().load().type(User.class).filter("subordinates", fred);
+
     }
 }
