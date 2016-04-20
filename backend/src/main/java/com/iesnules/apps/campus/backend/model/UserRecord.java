@@ -25,6 +25,10 @@ public class UserRecord {
 
     private String studiesType;
 
+    private String twitter;
+
+
+
     public UserRecord() {
 
     }
@@ -72,4 +76,8 @@ public class UserRecord {
     public void setStudiesType(String studiesType) {
         this.studiesType = studiesType;
     }
+
+    public String getTwitter() { return twitter;}
+
+    public void setTwitter(String twitter)  {this.twitter = twitter;}
 }

@@ -86,3 +86,15 @@
         android:onClick="onUpdate" />
 
 </LinearLayout>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/twitterEditText"
+        android:maxLength="30"
+        android:hint="@string/prof_twitter"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
