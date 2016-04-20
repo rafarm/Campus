@@ -174,13 +174,4 @@ public class GroupRecordEndpoint {
             throw new NotFoundException("Could not find UserRecord with ID: " + id);
         }
     }
-
-    @Entity
-    public class Group {
-        @Id String user;
-        List<Key<User>> subordinates = new ArrayList<Key<User>>();
-
-        Iterable<User> managers = ofy().load().type(User.class).filter("subordinates", fred);
-
-    }
 }
