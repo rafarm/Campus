@@ -106,8 +106,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
             else { // Error updating user profile
                 new AlertDialog.Builder(mContext)
-                        .setMessage()
+                        .setMessage(getString(R.string.prof_updateerror))
                         .setCancelable(true)
+                        .create()
+                        .show();
             }
         }
     }
