@@ -28,6 +28,8 @@
     <string name="prof_studiesType">Studies Type</string>
     <string name="prof_update">Update</string>
     <string name="prof_description">Description</string>
+    <string name="prof_twitter">Twitter</string>
+    <string name="prof_mail">Mail</string>
 
     <string name="nav_session">Session</string>
     <string name="nav_sign_out">Sign Out</string>
