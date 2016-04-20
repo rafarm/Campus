@@ -26,6 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mCenterNameEditText;
     private EditText mDescriptionEdiText;
     private EditText mStudiesTypeEditText;
+    private EditText mTwitterEditText;
 
 
     @Override
@@ -39,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
         mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
         mDescriptionEdiText = (EditText)findViewById(R.id.descriptionEditText);
         mStudiesTypeEditText = (EditText)findViewById(R.id.StudiesTypeEditText);
+        mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
 
         populateUI();
     }
@@ -48,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
         mStudiesTypeEditText.setText(mProfile.getUserRecord().getStudiesType());
+        mTwitterEditText.setText(mProfile.getUserRecord().getTwitter());
     }
 
     public void onUpdate(View view) {
@@ -73,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
             updated.setCenterName(mCenterNameEditText.getText().toString());
             updated.setDescription(mDescriptionEdiText.getText().toString());
             updated.setStudiesType(mStudiesTypeEditText.getText().toString());
+            updated.setTwitter(mTwitterEditText.getText().toString());
             return updated;
 
         }
