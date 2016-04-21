@@ -48,8 +48,10 @@ import com.iesnules.apps.campus.fragments.GroupsFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
+import com.iesnules.apps.campus.utils.RoundedTransformation;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private boolean mSigningIn;
 
-    private ImageManager mImageManager;
+    //private ImageManager mImageManager;
 
     //private RelativeLayout mFragmentContainer;
     private CoordinatorLayout mCoordinatorLayout;
@@ -158,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements
         mUserEmailTextView = (TextView) headerView.findViewById(R.id.userEmail);
         mUserPictureImageView = (ImageView) headerView.findViewById(R.id.userPicture);
 
-        mImageManager = ImageManager.create(this);
+        //mImageManager = ImageManager.create(this);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         //mFragmentContainer = (RelativeLayout)findViewById(R.id.fragment_container);
@@ -463,13 +465,19 @@ public class MainActivity extends AppCompatActivity implements
         if (signedIn) {
             mUserNameTextView.setText(mUserProfile.getUserName());
             mUserEmailTextView.setText(mUserProfile.getGoogleAccount().getEmail());
-            mImageManager.loadImage(mUserPictureImageView,
-                    mUserProfile.getGoogleAccount().getPhotoUrl(),
-                    R.mipmap.ic_launcher);
+            int radius = mUserPictureImageView.getWidth() / 2;
+            Picasso.with(this)
+                    .load(mUserProfile.getGoogleAccount().getPhotoUrl())
+                    .transform(new RoundedTransformation(radius, 0))
+                    .into(mUserPictureImageView);
+            //mImageManager.loadImage(mUserPictureImageView,
+            //        mUserProfile.getGoogleAccount().getPhotoUrl(),
+            //        R.mipmap.ic_launcher);
         } else {
             mUserNameTextView.setText("");
             mUserEmailTextView.setText("");
-            mImageManager.loadImage(mUserPictureImageView, null);
+            //mImageManager.loadImage(mUserPictureImageView, null);
+            mUserPictureImageView.setImageResource(R.mipmap.ic_launcher);
         }
     }
 
