@@ -64,14 +64,13 @@ public class NewGroupFragment extends DialogFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Add the buttons
         builder.setPositiveButton(R.string.create_group, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button}
             }
-        });
-
+        });*/
         }
 
     @Override
@@ -95,12 +94,14 @@ public class NewGroupFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        /*
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        */
     }
 
     @Override
