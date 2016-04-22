@@ -167,6 +167,43 @@ public class GroupRecordEndpoint {
         return response;
     }
 
+    @ApiMethod(
+            name = "circleGroups",
+            path = "group",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    private CollectionResponse<GroupRecord> circleGroups(@Nullable @Named("cursor") String cursor,
+                                                   @Nullable @Named("limit") Integer limit,
+                                                   @Named("userId") Long userId,
+                                                   User user) throws OAuthRequestException {
+        CollectionResponse<GroupRecord> response = null;
+
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
+        }
+        else {
+            limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+            List<GroupRecord> groupRecordCircleGroups = new ArrayList<GroupRecord>(limit);
+            Query<GroupRecord> query = ofy().load().type(GroupRecord.class)
+                    .filter("groupUsers", userId)
+                    .limit(limit);
+            if (cursor != null) {
+                query = query.startAt(Cursor.fromWebSafeString(cursor));
+            }
+            QueryResultIterator<GroupRecord> groupsIterator = query.iterator();
+
+            while (groupsIterator.hasNext()) {
+                groupRecordCircleGroups.add(groupsIterator.next());
+            }
+
+            response = CollectionResponse.<GroupRecord>builder()
+                    .setItems(groupRecordCircleGroups)
+                    .setNextPageToken(groupsIterator.getCursor().toWebSafeString())
+                    .build();
+        }
+
+        return response;
+    }
+
     private void checkExists(Long id) throws NotFoundException {
         try {
             ofy().load().type(UserRecord.class).id(id).safe();
