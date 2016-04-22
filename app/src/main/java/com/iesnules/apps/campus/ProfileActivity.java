@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -15,6 +16,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.model.UserProfile;
+import com.iesnules.apps.campus.utils.RoundedTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -29,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mStudiesTypeEditText;
     private EditText mTwitterEditText;
     private TextView mGoogleNameTextView;
+    private ImageView mGooglePhotoImageView;
 
 
     @Override
@@ -44,12 +48,19 @@ public class ProfileActivity extends AppCompatActivity {
         mStudiesTypeEditText = (EditText)findViewById(R.id.studiesTypeEditText);
         mGoogleNameTextView =  (TextView)findViewById(R.id.googleNameTextView);
         mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
+        mGooglePhotoImageView = (ImageView)findViewById(R.id.googlephoto);
 
         populateUI();
     }
 
     private void populateUI() {
         mGoogleNameTextView.setText(mProfile.getGoogleAccount().getDisplayName());
+        int radius = mGooglePhotoImageView.getWidth() / 2;
+        Picasso.with(this)
+                .load(mProfile.getGoogleAccount().getPhotoUrl())
+                .transform(new RoundedTransformation(radius, 0))
+                .into(mGooglePhotoImageView);
+
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
