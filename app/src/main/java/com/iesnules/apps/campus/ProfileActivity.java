@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -26,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mDescriptionEdiText;
     private EditText mStudiesTypeEditText;
     private EditText mTwitterEditText;
+    private TextView mGoogleNameTextView;
 
 
     @Override
@@ -38,15 +40,15 @@ public class ProfileActivity extends AppCompatActivity {
         mNickNameEditText = (EditText)findViewById(R.id.nickNameEditText);
         mCenterNameEditText = (EditText)findViewById(R.id.centerNameEditText);
         mDescriptionEdiText = (EditText)findViewById(R.id.descriptionEditText);
-        mStudiesTypeEditText = (EditText)findViewById(R.id.StudiesTypeEditText);
-        mgoogleNametextView =  (EditText)findViewById(R.id.GoogleNameTextView);
+        mStudiesTypeEditText = (EditText)findViewById(R.id.studiesTypeEditText);
+        mGoogleNameTextView =  (TextView)findViewById(R.id.googleNameTextView);
         mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
 
         populateUI();
     }
 
     private void populateUI() {
-        mgoogleNametextView = setText(mProfile.getGoogleAccount().getgoogleNametextView);
+        mGoogleNameTextView.setText(mProfile.getGoogleAccount().getDisplayName());
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
@@ -77,7 +79,6 @@ public class ProfileActivity extends AppCompatActivity {
             updated.setDescription(mDescriptionEdiText.getText().toString());
             updated.setStudiesType(mStudiesTypeEditText.getText().toString());
             updated.setTwitter(mTwitterEditText.getText().toString());
-            updated.setgoogleName(mgoogleNameTextView.getText().toString());
             return updated;
         }
 

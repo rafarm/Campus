@@ -8,31 +8,39 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.iesnules.apps.campus.ProfileActivity">
+    tools:context="com.iesnules.apps.campus.ProfileActivity"
+    android:weightSum="1">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_weight="0.87"
+        android:weightSum="1"
+        android:backgroundTint="@color/abc_color_highlight_material">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView" />
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_vertical|right" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Google Name"
-            android:id="@+id/googleNametextView"
+            android:id="@+id/googleNameTextView"
             android:textStyle="bold"
             android:typeface="monospace"
-            android:maxLength="@android:integer/status_bar_notification_info_maxnum" />
+            android:maxLength="@android:integer/status_bar_notification_info_maxnum"
+            android:layout_gravity="center|right"
+            android:textAlignment="center"
+            android:textSize="@dimen/abc_action_bar_icon_vertical_padding_material" />
+
     </LinearLayout>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
@@ -41,10 +49,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:maxLength="30"
-        android:hint="@string/prof_nickname" />
+        android:hint="@string/prof_nickname"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions"
         android:ems="10"
@@ -52,29 +63,52 @@
         android:maxLength="30"
         android:hint="@string/prof_centername"
         android:layout_below="@+id/nickNameEditText"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions"
         android:ems="10"
-        android:id="@+id/StudiesTypeEditText"
+        android:id="@+id/studiesTypeEditText"
         android:maxLength="30"
         android:hint="@string/prof_studiesType"
         android:layout_below="@+id/centerNameEditText"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/descriptionEditText"
         android:maxLength="30"
         android:hint="@string/prof_description"
-        android:layout_below="@+id/StudiesTypeEditText"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/studiesTypeEditText"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions"
+        android:ems="10"
+        android:id="@+id/twitterEditText"
+        android:maxLength="30"
+        android:hint="@string/prof_twitter"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -83,18 +117,7 @@
         android:id="@+id/updateButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:onClick="onUpdate" />
+        android:onClick="onUpdate"
+        android:layout_gravity="bottom|right" />
 
 </LinearLayout>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/twitterEditText"
-        android:maxLength="30"
-        android:hint="@string/prof_twitter"
-        android:layout_below="@+id/descriptionEditText"
-        android:layout_alignParentStart="true" />
-
-</RelativeLayout>

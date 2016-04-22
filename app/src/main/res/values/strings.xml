@@ -23,7 +23,7 @@
     </string> -->
 
     <!-- Strings related to profile -->
-    <string name="prof_nickname">Nickname</string>
+    <string name="prof_nickname">Nick Name</string>
     <string name="prof_centername">Center Name</string>
     <string name="prof_studiesType">Studies Type</string>
     <string name="prof_update">Update</string>
