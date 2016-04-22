@@ -46,6 +46,7 @@ import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.fragments.EventsFragment;
 import com.iesnules.apps.campus.fragments.GroupsFragment;
+import com.iesnules.apps.campus.fragments.NewGroupFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
@@ -139,10 +140,10 @@ public class MainActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                DialogFragment dFragment = new DialogFragment();
+                //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance("a", "b");
                 // Show DialogFragment
-                dFragment.show(transaction, "Dialog Fragment");
+                newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }
         });
 
