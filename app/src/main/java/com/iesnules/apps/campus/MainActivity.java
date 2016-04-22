@@ -1,6 +1,7 @@
 package com.iesnules.apps.campus;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -619,7 +620,21 @@ public class MainActivity extends AppCompatActivity implements
                 updateUI(true);
             } else {
                 mAlertDialog = new AlertDialog.Builder(mContext)
-                        .setMessage("Error confirming user identity in the backend -> sign in again...")
+                        .setPositiveButton(R.string.prof_AlertDialogPositiveButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                silentSignIn();
+                                mAlertDialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.prof_AlertDialogNegativeButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: We need to implement the function for closing the application.
+
+                            }
+                        })
+                        .setMessage(R.string.prof_AlerDialogMensage)
                         .setCancelable(true)
                         .create();
                 mAlertDialog.show();

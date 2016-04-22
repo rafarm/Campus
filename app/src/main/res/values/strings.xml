@@ -29,6 +29,9 @@
     <string name="prof_update">Update</string>
     <string name="prof_description">Description</string>
     <string name="prof_updating">Updating...</string>
+    <string name="prof_AlertDialogPositiveButton">Retry</string>
+    <string name="prof_AlertDialogNegativeButton">Abort</string>
+    <string name="prof_AlerDialogMensage">Error confirming user identity in the backend.   ¿Sign in again?</string>
 
     <string name="prof_twitter">Twitter</string>
     <string name="prof_mail">Mail</string>
