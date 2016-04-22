@@ -1,5 +1,6 @@
 package com.iesnules.apps.campus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -46,8 +48,10 @@ import com.iesnules.apps.campus.fragments.GroupsFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
+import com.iesnules.apps.campus.utils.RoundedTransformation;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private boolean mSigningIn;
 
-    private ImageManager mImageManager;
+    //private ImageManager mImageManager;
 
     //private RelativeLayout mFragmentContainer;
     private CoordinatorLayout mCoordinatorLayout;
@@ -152,13 +156,13 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerNavigationView.setNavigationItemSelectedListener(this);
 
         View headerView = mDrawerNavigationView.getHeaderView(0);
-        mUserNameTextView = (TextView)headerView.findViewById(R.id.userName);
-        mUserEmailTextView = (TextView)headerView.findViewById(R.id.userEmail);
-        mUserPictureImageView = (ImageView)headerView.findViewById(R.id.userPicture);
+        mUserNameTextView = (TextView) headerView.findViewById(R.id.userName);
+        mUserEmailTextView = (TextView) headerView.findViewById(R.id.userEmail);
+        mUserPictureImageView = (ImageView) headerView.findViewById(R.id.userPicture);
 
-        mImageManager = ImageManager.create(this);
+        //mImageManager = ImageManager.create(this);
 
-        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         //mFragmentContainer = (RelativeLayout)findViewById(R.id.fragment_container);
 
         // Bottom bar...
@@ -195,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Lazily create recent fragment.
+     *
      * @return RecentFragment
      */
     private RecentFragment getRecentFragment() {
@@ -207,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Lazily create groups fragment.
+     *
      * @return GroupsFragment
      */
     private GroupsFragment getGroupFragment() {
@@ -219,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Lazily create resources fragment.
+     *
      * @return ResourcesFragment
      */
     private ResourcesFragment getResourcesFragment() {
@@ -231,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Lazily create events fragment.
+     *
      * @return EventsFragment
      */
     private EventsFragment getEventsFragment() {
@@ -243,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Switch to a new fragment stack.
+     *
      * @param newFragment
      */
     private void switchFragment(Fragment newFragment) {
@@ -255,8 +264,7 @@ public class MainActivity extends AppCompatActivity implements
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(newFragment.getTag());
         if (fragment != null) {
             transaction.attach(fragment);
-        }
-        else {
+        } else {
             transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
                     mTagCount++);
         }
@@ -334,6 +342,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * User profile getter.
+     *
      * @return UserProfile
      */
     public static UserProfile getUserProfile() {
@@ -348,6 +357,7 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Checks if Google Play Services are installed and if not it initializes
      * opening the dialog to allow user to install Google Play Services.
+     *
      * @return a boolean indicating if the Google Play Services are available.
      */
     private boolean checkPlayServices() {
@@ -375,8 +385,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (pendingResult.isDone()) {
             handleSignInResult(pendingResult.get());
-        }
-        else {
+        } else {
             // There's no immediate result ready, displays some progress indicator and waits for the
             // async callback.
             showProgressIndicator();
@@ -392,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Handles user sign in result.
+     *
      * @param result User sign in result.
      */
     private void handleSignInResult(GoogleSignInResult result) {
@@ -400,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements
             mSigningIn = false;
 
             // Register user into the backend
-            new RegisterUserAsyncTask().execute(result.getSignInAccount());
+            new RegisterUserAsyncTask(this).execute(result.getSignInAccount());
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
@@ -448,20 +458,26 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Shows and hides widgets to adapt UI to user authentication status.
+     *
      * @param signedIn Boolean value stating if the user is currently authenticated.
      */
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             mUserNameTextView.setText(mUserProfile.getUserName());
             mUserEmailTextView.setText(mUserProfile.getGoogleAccount().getEmail());
-            mImageManager.loadImage(mUserPictureImageView,
-                    mUserProfile.getGoogleAccount().getPhotoUrl(),
-                    R.mipmap.ic_launcher);
-        }
-        else {
+            int radius = mUserPictureImageView.getWidth() / 2;
+            Picasso.with(this)
+                    .load(mUserProfile.getGoogleAccount().getPhotoUrl())
+                    .transform(new RoundedTransformation(radius, 0))
+                    .into(mUserPictureImageView);
+            //mImageManager.loadImage(mUserPictureImageView,
+            //        mUserProfile.getGoogleAccount().getPhotoUrl(),
+            //        R.mipmap.ic_launcher);
+        } else {
             mUserNameTextView.setText("");
             mUserEmailTextView.setText("");
-            mImageManager.loadImage(mUserPictureImageView, null);
+            //mImageManager.loadImage(mUserPictureImageView, null);
+            mUserPictureImageView.setImageResource(R.mipmap.ic_launcher);
         }
     }
 
@@ -560,7 +576,15 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile>{
+    private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
+
+        private Context mContext;
+        private AlertDialog mAlertDialog;
+
+        public RegisterUserAsyncTask(Context context) {
+            mContext = context;
+        }
+
 
         @Override
         protected UserProfile doInBackground(GoogleSignInAccount... params) {
@@ -593,12 +617,14 @@ public class MainActivity extends AppCompatActivity implements
             if (profile != null) { // User profile exists in backend store
                 mUserProfile = profile;
                 updateUI(true);
-            }
-            else { // Error confirming user identity in the backend -> sign in again...
-                // TODO: Avoid failing signing in loop...
-                signIn();
+            } else {
+                mAlertDialog = new AlertDialog.Builder(mContext)
+                        .setMessage("Error confirming user identity in the backend -> sign in again...")
+                        .setCancelable(true)
+                        .create();
+                mAlertDialog.show();
+
             }
         }
     }
-
 }
