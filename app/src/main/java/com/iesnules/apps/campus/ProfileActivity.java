@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
                 mProfile.setUserRecord(record);
             }
             else { // Error updating user profile
-                new AlertDialog.Builder(mContext)
+                 new AlertDialog.Builder(mContext)
                         .setMessage(getString(R.string.prof_updateerror))
                         .setCancelable(true)
                         .create()
