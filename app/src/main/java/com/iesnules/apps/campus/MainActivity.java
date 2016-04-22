@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance("a", "b");
+                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance("a");
                 // Show DialogFragment
                 newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }
