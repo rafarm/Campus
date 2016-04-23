@@ -1,5 +1,6 @@
 package com.iesnules.apps.campus;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
     private class UpdateUserProfileAsyncTask extends AsyncTask<Void, Void, UserRecord> {
 
         private Context mContext;
+        private ProgressDialog mProgressDialog;
 
         public UpdateUserProfileAsyncTask(Context context) {
             mContext = context;
@@ -80,6 +82,13 @@ public class ProfileActivity extends AppCompatActivity {
             updated.setStudiesType(mStudiesTypeEditText.getText().toString());
             updated.setTwitter(mTwitterEditText.getText().toString());
             return updated;
+
+        }
+        @Override
+        protected void onPreExecute() {
+            mProgressDialog = new ProgressDialog(mContext);
+            mProgressDialog.setMessage(getString(R.string.prof_updating));
+            mProgressDialog.show();
         }
 
         @Override
@@ -104,12 +113,19 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(UserRecord record) {
+            mProgressDialog.dismiss();
+
             if (record != null) { // Update local user profile
                 mProfile.setUserRecord(record);
+
             }
             else { // Error updating user profile
                 // TODO: Notify error...
             }
         }
+
+
+
     }
+
 }

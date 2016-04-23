@@ -78,7 +78,11 @@ public class UserRecord {
         this.studiesType = studiesType;
     }
 
-    public String getTwitter() { return twitter;}
+    public String getTwitter() {
+        return twitter;
+    }
 
-    public void setTwitter(String twitter)  {this.twitter = twitter;}
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
 }
