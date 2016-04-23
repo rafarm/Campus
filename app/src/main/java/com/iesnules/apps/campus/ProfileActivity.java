@@ -114,6 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(UserRecord record) {
             mProgressDialog.dismiss();
+            mProgressDialog = null;
 
             if (record != null) { // Update local user profile
                 mProfile.setUserRecord(record);

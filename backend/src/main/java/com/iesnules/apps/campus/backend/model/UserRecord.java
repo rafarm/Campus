@@ -27,9 +27,6 @@ public class UserRecord {
 
     private String twitter;
 
-
-
-
     public UserRecord() {
 
     }

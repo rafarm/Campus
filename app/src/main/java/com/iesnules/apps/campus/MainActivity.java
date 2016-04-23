@@ -579,12 +579,10 @@ public class MainActivity extends AppCompatActivity implements
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
-        private AlertDialog mAlertDialog;
 
         public RegisterUserAsyncTask(Context context) {
             mContext = context;
         }
-
 
         @Override
         protected UserProfile doInBackground(GoogleSignInAccount... params) {
@@ -618,12 +616,11 @@ public class MainActivity extends AppCompatActivity implements
                 mUserProfile = profile;
                 updateUI(true);
             } else {
-                mAlertDialog = new AlertDialog.Builder(mContext)
+                new AlertDialog.Builder(mContext)
                         .setMessage("Error confirming user identity in the backend -> sign in again...")
                         .setCancelable(true)
-                        .create();
-                mAlertDialog.show();
-
+                        .create()
+                        .show();
             }
         }
     }
