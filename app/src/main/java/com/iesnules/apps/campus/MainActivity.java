@@ -1,6 +1,7 @@
 package com.iesnules.apps.campus;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -579,10 +580,12 @@ public class MainActivity extends AppCompatActivity implements
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
+        private AlertDialog mAlertDialog;
 
         public RegisterUserAsyncTask(Context context) {
             mContext = context;
         }
+
 
         @Override
         protected UserProfile doInBackground(GoogleSignInAccount... params) {
@@ -616,11 +619,26 @@ public class MainActivity extends AppCompatActivity implements
                 mUserProfile = profile;
                 updateUI(true);
             } else {
-                new AlertDialog.Builder(mContext)
-                        .setMessage("Error confirming user identity in the backend -> sign in again...")
+                mAlertDialog = new AlertDialog.Builder(mContext)
+                        .setPositiveButton(R.string.prof_AlertDialogPositiveButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                silentSignIn();
+                                mAlertDialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.prof_AlertDialogNegativeButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: We need to implement the function for closing the application.
+
+                            }
+                        })
+                        .setMessage(R.string.prof_AlerDialogMensage)
                         .setCancelable(true)
-                        .create()
-                        .show();
+                        .create();
+                mAlertDialog.show();
+
             }
         }
     }
