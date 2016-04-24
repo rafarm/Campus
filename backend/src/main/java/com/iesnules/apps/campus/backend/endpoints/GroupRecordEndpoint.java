@@ -63,8 +63,8 @@ public class GroupRecordEndpoint {
 
     @ApiMethod(
             name = "create",
-            path = "group.create/",
-            httpMethod = ApiMethod.HttpMethod.GET)
+            path = "group/",
+            httpMethod = ApiMethod.HttpMethod.POST)
     public GroupRecord create(GroupRecord groupRecord, User user)
             throws OAuthRequestException, IllegalArgumentException {
 
@@ -168,10 +168,10 @@ public class GroupRecordEndpoint {
     }
 
     @ApiMethod(
-            name = "circleGroups",
-            path = "group",
+            name = "find",
+            path = "group.find",
             httpMethod = ApiMethod.HttpMethod.GET)
-    private CollectionResponse<GroupRecord> circleGroups(@Nullable @Named("cursor") String cursor,
+    private CollectionResponse<GroupRecord> find(@Nullable @Named("cursor") String cursor,
                                                    @Nullable @Named("limit") Integer limit,
                                                    @Named("userId") Long userId,
                                                    User user) throws OAuthRequestException {

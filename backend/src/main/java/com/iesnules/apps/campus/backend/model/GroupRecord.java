@@ -1,7 +1,6 @@
 package com.iesnules.apps.campus.backend.model;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
+import com.google.appengine.api.datastore.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -20,8 +19,6 @@ public class GroupRecord {
     @Id
     Long id;
 
-    Key<UserRecord> creator;
-
     @Index
     private String groupName;
 
@@ -29,13 +26,10 @@ public class GroupRecord {
 
     private Date creationDate;
 
-    List<Key<UserRecord>> groupUsers = new ArrayList<Key<UserRecord>>();
+    @Index
+    List<Key> groupUsers = new ArrayList<Key>();
 
-    @Load Ref<UserRecord> owner;    // Person is an @Entity
-
-    public UserRecord getOwner() { return owner.get(); }
-    public void setDriver(UserRecord value) { owner = Ref.create(value); }
-
+    Key owner;    // Person is an @Entity
 
     public GroupRecord() {}
 
@@ -64,8 +58,16 @@ public class GroupRecord {
         return creationDate;
     }
 
-    public List<Key<UserRecord>> getGroupUsers() {
+    public List<Key> getGroupUsers() {
         return groupUsers;
+    }
+
+    public Key getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Key key) {
+        owner = key;
     }
 
     /**
