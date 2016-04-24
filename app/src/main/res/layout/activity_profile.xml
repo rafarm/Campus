@@ -137,7 +137,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_backup"
                     android:onClick="onUpdate"
-                    android:tint="#ffffff" />
+                    android:tint="#ffffff"
+                    app:backgroundTint="@android:color/holo_green_dark" />
 
             </com.github.jorgecastilloprz.FABProgressCircle>
 
