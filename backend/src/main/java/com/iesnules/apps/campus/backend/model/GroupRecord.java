@@ -1,12 +1,16 @@
 package com.iesnules.apps.campus.backend.model;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnSave;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by robertoroig & andrestendero on 12/04/16.
@@ -15,6 +19,7 @@ import java.util.Date;
 public class GroupRecord {
     @Id
     Long id;
+
     Key<UserRecord> creator;
 
     @Index
@@ -23,6 +28,14 @@ public class GroupRecord {
     private String description;
 
     private Date creationDate;
+
+    List<Key<UserRecord>> groupUsers = new ArrayList<Key<UserRecord>>();
+
+    @Load Ref<UserRecord> owner;    // Person is an @Entity
+
+    public UserRecord getOwner() { return owner.get(); }
+    public void setDriver(UserRecord value) { owner = Ref.create(value); }
+
 
     public GroupRecord() {}
 
@@ -49,6 +62,10 @@ public class GroupRecord {
     // This attribute will be readonly
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public List<Key<UserRecord>> getGroupUsers() {
+        return groupUsers;
     }
 
     /**

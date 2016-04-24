@@ -9,7 +9,10 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 import com.iesnules.apps.campus.backend.Constants;
 import com.iesnules.apps.campus.backend.model.GroupRecord;
@@ -158,6 +161,43 @@ public class GroupRecordEndpoint {
             response = CollectionResponse.<GroupRecord>builder()
                     .setItems(groupRecordList)
                     .setNextPageToken(queryIterator.getCursor().toWebSafeString())
+                    .build();
+        }
+
+        return response;
+    }
+
+    @ApiMethod(
+            name = "circleGroups",
+            path = "group",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    private CollectionResponse<GroupRecord> circleGroups(@Nullable @Named("cursor") String cursor,
+                                                   @Nullable @Named("limit") Integer limit,
+                                                   @Named("userId") Long userId,
+                                                   User user) throws OAuthRequestException {
+        CollectionResponse<GroupRecord> response = null;
+
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
+        }
+        else {
+            limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+            List<GroupRecord> groupRecordCircleGroups = new ArrayList<GroupRecord>(limit);
+            Query<GroupRecord> query = ofy().load().type(GroupRecord.class)
+                    .filter("groupUsers", userId)
+                    .limit(limit);
+            if (cursor != null) {
+                query = query.startAt(Cursor.fromWebSafeString(cursor));
+            }
+            QueryResultIterator<GroupRecord> groupsIterator = query.iterator();
+
+            while (groupsIterator.hasNext()) {
+                groupRecordCircleGroups.add(groupsIterator.next());
+            }
+
+            response = CollectionResponse.<GroupRecord>builder()
+                    .setItems(groupRecordCircleGroups)
+                    .setNextPageToken(groupsIterator.getCursor().toWebSafeString())
                     .build();
         }
 
