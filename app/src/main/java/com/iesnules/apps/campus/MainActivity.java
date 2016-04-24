@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -37,13 +38,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.plus.Plus;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.dummy.DummyContent;
+import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.fragments.EventsFragment;
 import com.iesnules.apps.campus.fragments.GroupsFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
@@ -59,20 +60,18 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         NavigationView.OnNavigationItemSelectedListener,
-        GroupsFragment.OnListFragmentInteractionListener {
+        GroupsFragment.OnListFragmentInteractionListener,
+        ErrorDialogFragment.ErrorDialogListener {
 
     private static final String TAG = "MainActivity";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final int RC_SIGN_IN = 9001;
 
-    //private static GoogleSignInAccount mSignInAccount;
     private static UserProfile mUserProfile;
 
     private GoogleApiClient mGoogleApiClient;
     private boolean mSigningIn;
-
-    //private ImageManager mImageManager;
 
     //private RelativeLayout mFragmentContainer;
     private CoordinatorLayout mCoordinatorLayout;
@@ -577,10 +576,20 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        silentSignIn();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        finish();
+    }
+
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
-        private AlertDialog mAlertDialog;
+        //private AlertDialog mAlertDialog;
 
         public RegisterUserAsyncTask(Context context) {
             mContext = context;
@@ -619,6 +628,14 @@ public class MainActivity extends AppCompatActivity implements
                 mUserProfile = profile;
                 updateUI(true);
             } else {
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Sign in error",
+                        getString(R.string.main_alert_dialog_message),
+                        getString(R.string.main_alert_dialog_positive_button),
+                        getString(R.string.main_alert_dialog_negative_button));
+
+                fragment.show(getSupportFragmentManager(), "signin_error");
+
+                /*
                 mAlertDialog = new AlertDialog.Builder(mContext)
                         .setPositiveButton(R.string.prof_AlertDialogPositiveButton, new DialogInterface.OnClickListener() {
                             @Override
@@ -638,7 +655,7 @@ public class MainActivity extends AppCompatActivity implements
                         .setCancelable(true)
                         .create();
                 mAlertDialog.show();
-
+                */
             }
         }
     }
