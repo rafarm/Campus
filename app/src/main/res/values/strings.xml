@@ -33,4 +33,11 @@
     <string name="nav_resources">Resources</string>
 
     <string name="title_activity_profile">Profile</string>
+
+    <!-- NewGroupFragment Strings -->
+    <string name="hello_blank_fragment">Create group</string>
+    <string name="create">Create</string>
+    <string name="create_new_group">Create new group</string>
+    <string name="group_name">Group Name</string>
+    <string name="description">Add description</string>
 </resources>

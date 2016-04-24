@@ -47,6 +47,7 @@ import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.fragments.EventsFragment;
 import com.iesnules.apps.campus.fragments.GroupsFragment;
+import com.iesnules.apps.campus.fragments.NewGroupFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements
     //private Stack<Fragment> mEventsFragmentStack;
     private Fragment mCurrentFragment;
     private int mTagCount = 0;
+    private Fragment newGroupFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,16 +137,16 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance("a");
+                // Show DialogFragment
+                newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }
         });
-        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
