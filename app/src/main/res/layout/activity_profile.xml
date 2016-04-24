@@ -13,13 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/abc_search_url_text_normal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/googlephoto"
-            android:layout_gravity="center_vertical|right" />
+            android:id="@+id/googlePhoto"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="match_parent"
@@ -29,7 +33,7 @@
             android:textStyle="bold"
             android:typeface="monospace"
             android:maxLength="@android:integer/status_bar_notification_info_maxnum"
-            android:layout_gravity="center|right"
+            android:layout_gravity="center|left"
             android:textAlignment="center"
             android:textSize="@dimen/abc_action_bar_icon_vertical_padding_material" />
 
@@ -136,22 +140,9 @@
                     android:tint="#ffffff" />
 
             </com.github.jorgecastilloprz.FABProgressCircle>
+
         </RelativeLayout>
 
-
-
-        <!--
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/prof_update"
-            android:id="@+id/updateButton"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="onUpdate"
-            android:layout_gravity="bottom|right"
-            style="?attr/borderlessButtonStyle" />
-         -->
     </LinearLayout>
 
 </LinearLayout>

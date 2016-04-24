@@ -1,6 +1,5 @@
 package com.iesnules.apps.campus;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -37,11 +36,10 @@ public class ProfileActivity extends AppCompatActivity
     private EditText mDescriptionEdiText;
     private EditText mStudiesTypeEditText;
     private EditText mTwitterEditText;
+    private ImageView mGooglePhotoImageView;
     private TextView mGoogleNameTextView;
     private FABProgressCircle mUpdateFABCircle;
     private FloatingActionButton mUpdateFAB;
-    private ImageView mGooglePhotoImageView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +54,11 @@ public class ProfileActivity extends AppCompatActivity
         mStudiesTypeEditText = (EditText)findViewById(R.id.studiesTypeEditText);
         mGoogleNameTextView =  (TextView)findViewById(R.id.googleNameTextView);
         mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
+        mGooglePhotoImageView = (ImageView)findViewById(R.id.googlePhoto);
         mUpdateFABCircle = (FABProgressCircle)findViewById(R.id.updateFabProgressCircle);
         mUpdateFAB = (FloatingActionButton)findViewById(R.id.updateFab);
 
         mUpdateFABCircle.attachListener(this);
-        mGooglePhotoImageView = (ImageView)findViewById(R.id.googlephoto);
 
         populateUI();
     }
@@ -72,7 +70,6 @@ public class ProfileActivity extends AppCompatActivity
                 .load(mProfile.getGoogleAccount().getPhotoUrl())
                 .transform(new RoundedTransformation(radius, 0))
                 .into(mGooglePhotoImageView);
-
         mNickNameEditText.setText(mProfile.getUserRecord().getNickName());
         mCenterNameEditText.setText(mProfile.getUserRecord().getCenterName());
         mDescriptionEdiText.setText(mProfile.getUserRecord().getDescription());
@@ -105,7 +102,6 @@ public class ProfileActivity extends AppCompatActivity
     private class UpdateUserProfileAsyncTask extends AsyncTask<Void, Void, UserRecord> {
 
         private Context mContext;
-        //private ProgressDialog mProgressDialog;
 
         public UpdateUserProfileAsyncTask(Context context) {
             mContext = context;
@@ -168,5 +164,4 @@ public class ProfileActivity extends AppCompatActivity
             }
         }
     }
-
 }
