@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.iesnules.apps.campus.ProfileActivity"
     android:weightSum="1">
 
@@ -15,9 +12,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.87"
-        android:weightSum="1"
-        android:backgroundTint="@color/abc_color_highlight_material">
+        android:background="@color/abc_search_url_text_normal"
+        android:layout_weight="1">
 
         <ImageView
             android:layout_width="150dp"
@@ -39,85 +35,123 @@
 
     </LinearLayout>
 
-    <EditText
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/nickNameEditText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:maxLength="30"
-        android:hint="@string/prof_nickname"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        android:textSize="16dp" />
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"
-        android:ems="10"
-        android:id="@+id/centerNameEditText"
-        android:maxLength="30"
-        android:hint="@string/prof_centername"
-        android:layout_below="@+id/nickNameEditText"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        android:textSize="16dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/nickNameEditText"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:maxLength="30"
+            android:hint="@string/prof_nickname"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="16dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"
-        android:ems="10"
-        android:id="@+id/studiesTypeEditText"
-        android:maxLength="30"
-        android:hint="@string/prof_studiesType"
-        android:layout_below="@+id/centerNameEditText"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        android:textSize="16dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:ems="10"
+            android:id="@+id/centerNameEditText"
+            android:maxLength="30"
+            android:hint="@string/prof_centername"
+            android:layout_below="@+id/nickNameEditText"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="16dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/descriptionEditText"
-        android:maxLength="30"
-        android:hint="@string/prof_description"
-        android:layout_below="@+id/studiesTypeEditText"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        android:textSize="16dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:ems="10"
+            android:id="@+id/studiesTypeEditText"
+            android:maxLength="30"
+            android:hint="@string/prof_studiesType"
+            android:layout_below="@+id/centerNameEditText"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="16dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"
-        android:ems="10"
-        android:id="@+id/twitterEditText"
-        android:maxLength="30"
-        android:hint="@string/prof_twitter"
-        android:layout_below="@+id/descriptionEditText"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        android:textSize="16dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/descriptionEditText"
+            android:maxLength="30"
+            android:hint="@string/prof_description"
+            android:layout_below="@+id/studiesTypeEditText"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="16dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/prof_update"
-        android:id="@+id/updateButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onUpdate"
-        android:layout_gravity="bottom|right" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:ems="10"
+            android:id="@+id/twitterEditText"
+            android:maxLength="30"
+            android:hint="@string/prof_twitter"
+            android:layout_below="@+id/descriptionEditText"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="16dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end">
+
+            <com.github.jorgecastilloprz.FABProgressCircle
+                android:id="@+id/updateFabProgressCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                app:reusable="true">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/updateFab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_backup"
+                    android:onClick="onUpdate"
+                    android:tint="#ffffff" />
+
+            </com.github.jorgecastilloprz.FABProgressCircle>
+        </RelativeLayout>
+
+
+
+        <!--
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prof_update"
+            android:id="@+id/updateButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onUpdate"
+            android:layout_gravity="bottom|right"
+            style="?attr/borderlessButtonStyle" />
+         -->
+    </LinearLayout>
 
 </LinearLayout>

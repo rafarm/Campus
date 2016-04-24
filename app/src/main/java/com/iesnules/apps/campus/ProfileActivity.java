@@ -1,25 +1,29 @@
 package com.iesnules.apps.campus;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
+import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.model.UserProfile;
 
 import java.io.IOException;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity
+        implements ErrorDialogFragment.ErrorDialogListener, FABProgressListener {
 
     private UserProfile mProfile;
 
@@ -30,7 +34,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mStudiesTypeEditText;
     private EditText mTwitterEditText;
     private TextView mGoogleNameTextView;
-
+    private FABProgressCircle mUpdateFABCircle;
+    private FloatingActionButton mUpdateFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
         mStudiesTypeEditText = (EditText)findViewById(R.id.studiesTypeEditText);
         mGoogleNameTextView =  (TextView)findViewById(R.id.googleNameTextView);
         mTwitterEditText = (EditText)findViewById(R.id.twitterEditText);
+        mUpdateFABCircle = (FABProgressCircle)findViewById(R.id.updateFabProgressCircle);
+        mUpdateFAB = (FloatingActionButton)findViewById(R.id.updateFab);
+
+        mUpdateFABCircle.attachListener(this);
 
         populateUI();
     }
@@ -62,10 +71,28 @@ public class ProfileActivity extends AppCompatActivity {
         new UpdateUserProfileAsyncTask(this).execute();
     }
 
+    /**
+     * Listener methods
+     */
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        // Do nothing...
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // Do nothing...
+    }
+
+    @Override
+    public void onFABProgressAnimationEnd() {
+        mUpdateFAB.setEnabled(true);
+    }
+
     private class UpdateUserProfileAsyncTask extends AsyncTask<Void, Void, UserRecord> {
 
         private Context mContext;
-        private ProgressDialog mProgressDialog;
+        //private ProgressDialog mProgressDialog;
 
         public UpdateUserProfileAsyncTask(Context context) {
             mContext = context;
@@ -87,9 +114,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setMessage(getString(R.string.prof_updating));
-            mProgressDialog.show();
+            mUpdateFAB.setEnabled(false);
+            mUpdateFABCircle.show();
         }
 
         @Override
@@ -106,6 +132,7 @@ public class ProfileActivity extends AppCompatActivity {
             try {
                 record = service.update(record).execute();
             } catch (IOException e) {
+                record = null;
                 e.printStackTrace();
             }
 
@@ -114,24 +141,19 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(UserRecord record) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-
             if (record != null) { // Update local user profile
+                mUpdateFABCircle.beginFinalAnimation();
                 mProfile.setUserRecord(record);
-
             }
             else { // Error updating user profile
-                 new AlertDialog.Builder(mContext)
-                        .setMessage(getString(R.string.prof_updateerror))
-                        .setCancelable(true)
-                        .create()
-                        .show();
+                mUpdateFABCircle.hide();
+                mUpdateFAB.setEnabled(true);
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Error",
+                        getString(R.string.prof_update_error), null, null);
+
+                fragment.show(getSupportFragmentManager(), "update_error");
             }
         }
-
-
-
     }
 
 }

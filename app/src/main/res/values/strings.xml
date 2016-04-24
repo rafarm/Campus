@@ -30,10 +30,9 @@
     <string name="prof_description">Description</string>
     <string name="prof_googleName">Google Name</string>
     <string name="prof_updating">Updating...</string>
-
     <string name="prof_twitter">Twitter</string>
     <string name="prof_mail">Mail</string>
-    <string name="prof_updateerror">Update Error</string>
+    <string name="prof_update_error">Error updating profile</string>
 
     <string name="nav_session">Session</string>
     <string name="nav_sign_out">Sign Out</string>
