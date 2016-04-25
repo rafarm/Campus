@@ -18,6 +18,7 @@ import android.widget.EditText;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.iesnules.apps.campus.MainActivity;
 import com.iesnules.apps.campus.R;
 import com.iesnules.apps.campus.backend.group.Group;
 import com.iesnules.apps.campus.backend.group.model.GroupRecord;
@@ -141,7 +142,7 @@ public class NewGroupFragment extends DialogFragment {
         protected GroupRecord doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
                     getString(R.string.server_credential));
-            credential.setSelectedAccountName(mUserProfile.getUserAccountName());
+            credential.setSelectedAccountName(MainActivity.getUserProfile().getUserAccountName());
 
             Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), credential);
@@ -149,7 +150,7 @@ public class NewGroupFragment extends DialogFragment {
 
             GroupRecord record = getNewRecord();
             try {
-                record = service.insert(mUserProfile.getUserRecord().getId(), record).execute();
+                record = service.insert(mUserId, record).execute();
             } catch (IOException e) {
                 record = null;
                 e.printStackTrace();
