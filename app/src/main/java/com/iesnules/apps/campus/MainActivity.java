@@ -67,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         NavigationView.OnNavigationItemSelectedListener,
         GroupsFragment.OnListFragmentInteractionListener,
-        ErrorDialogFragment.ErrorDialogListener {
+        ErrorDialogFragment.ErrorDialogListener,
+        NewGroupFragment.OnNewGroupFragmentListener {
 
     private static final String TAG = "MainActivity";
 
@@ -597,15 +598,17 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
+    public void onCreateGroup(GroupRecord record) {
+        //TODO: Insert new group to group list.
+    }
+
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
-        //private AlertDialog mAlertDialog;
 
         public RegisterUserAsyncTask(Context context) {
             mContext = context;
         }
-
 
         @Override
         protected UserProfile doInBackground(GoogleSignInAccount... params) {

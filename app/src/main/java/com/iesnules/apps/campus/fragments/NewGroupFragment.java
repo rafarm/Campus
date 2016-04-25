@@ -40,7 +40,8 @@ public class NewGroupFragment extends DialogFragment {
 
     private EditText mGroupNameEditText;
     private EditText mGroupDescEditText;
-    //private OnNewGroupFragmentListener mListener;
+
+    private OnNewGroupFragmentListener mListener;
 
     public NewGroupFragment() {
         // Required empty public constructor
@@ -88,7 +89,6 @@ public class NewGroupFragment extends DialogFragment {
         }
     }
 
-    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -109,7 +109,6 @@ public class NewGroupFragment extends DialogFragment {
     public interface OnNewGroupFragmentListener {
         void onCreateGroup(GroupRecord record);
     }
-    */
 
     private class CreateGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
 
@@ -133,6 +132,7 @@ public class NewGroupFragment extends DialogFragment {
             return record;
 
         }
+
         @Override
         protected void onPreExecute() {
 
@@ -160,14 +160,14 @@ public class NewGroupFragment extends DialogFragment {
         }
 
         protected void onPostExecute(GroupRecord record) {
-            if (record != null) { // Update local user profile
-
+            if (record != null) { // Notify listener
+                mListener.onCreateGroup(record);
             }
-            else { // Error updating user profile
+            else { // Error creating group
                 ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Error",
-                        getString(R.string.prof_update_error), null, null);
+                        getString(R.string.group_create_error), null, null);
 
-                fragment.show(getSupportFragmentManager(), "update_error");
+                fragment.show(getActivity().getSupportFragmentManager(), "create_group_error");
             }
         }
     }
