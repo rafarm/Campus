@@ -1,5 +1,6 @@
 package com.iesnules.apps.campus.adapters;
 
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iesnules.apps.campus.R;
+import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 import com.iesnules.apps.campus.fragments.GroupsFragment.OnListFragmentInteractionListener;
 import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
 
@@ -20,10 +22,10 @@ import java.util.List;
  */
 public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final SortedList<GroupRecord> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public GroupRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public GroupRecyclerViewAdapter(SortedList<GroupRecord> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -38,8 +40,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mGroupNameView.setText(mValues.get(position).getGroupName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,20 +61,18 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mGroupNameView;
+        public GroupRecord mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mGroupNameView = (TextView) view.findViewById(R.id.groupNameTextView);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mGroupNameView.getText() + "'";
         }
     }
 }
