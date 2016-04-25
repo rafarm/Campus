@@ -146,7 +146,8 @@ public class MainActivity extends AppCompatActivity implements
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance();
+                NewGroupFragment newGroupFragment = NewGroupFragment
+                        .newInstance(mUserProfile.getUserRecord().getId());
                 // Show DialogFragment
                 newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }

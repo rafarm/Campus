@@ -83,7 +83,7 @@ public class NewGroupFragment extends DialogFragment {
 
     public void onNewGroup(View view) {
         if (view.getId() == R.id.buttonNewGroup) {
-            new CreateGroupAsyncTask(this).execute();
+            new CreateGroupAsyncTask(getContext()).execute();
         }
     }
 
@@ -125,20 +125,9 @@ public class NewGroupFragment extends DialogFragment {
         private GroupRecord getNewRecord() {
             GroupRecord record = new GroupRecord();
 
-            // Set owner reference
-            /*
-            com.iesnules.apps.campus.backend.group.model.Key groupKey = record.getKey();
-            com.iesnules.apps.campus.backend.user.model.Key userKey = mUserProfile.getUserRecord().getKey();
-            groupKey.setId(userKey.getId());
-            groupKey.setKind(userKey.getKind());
-            groupKey.setName(userKey.getName());
-            */
-
             // Set group data
-            EditText groupNameEditText = (EditText)findViewById(R.id.groupNameEditText);
-            EditText groupDescEditText = (EditText)findViewById(R.id.groupDescEditText);
-            //record.setGroupName(groupNameEditText.getText().toString());
-            //record.setDescription(groupDescEditText.getText().toString());
+            record.setGroupName(mGroupNameEditText.getText().toString());
+            record.setDescription(mGroupDescEditText.getText().toString());
 
             return record;
 
