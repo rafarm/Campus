@@ -73,7 +73,7 @@ public class GroupRecordEndpoint {
         if (user == null) {
             throw new OAuthRequestException("Unauthorized access.");
         }
-        else if (groupRecord.getId() != null) {
+        else if (groupRecord.getKey() != null) {
             throw new IllegalArgumentException("Group already created.");
         }
         else {

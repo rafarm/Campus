@@ -1,28 +1,29 @@
 package com.iesnules.apps.campus;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.media.VolumeProviderCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,6 +42,9 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.iesnules.apps.campus.backend.group.Group;
+import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.dummy.DummyContent;
@@ -57,6 +61,7 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.security.KeyFactory;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView mUserPictureImageView;
     private BottomBar mBottomBar;
     private NavigationView mDrawerNavigationView;
+    private FloatingActionButton mFAB;
 
     private final int BOTTOMBAR_ITEM_RECENT_POSITION = 0;
     private final int BOTTOMBAR_ITEM_GROUPS_POSITION = 1;
@@ -99,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements
     //private Stack<Fragment> mEventsFragmentStack;
     private Fragment mCurrentFragment;
     private int mTagCount = 0;
-    private Fragment newGroupFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +142,11 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFAB = (FloatingActionButton) findViewById(R.id.fab);
+        mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance("a");
+                NewGroupFragment newGroupFragment = NewGroupFragment.newInstance();
                 // Show DialogFragment
                 newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }
@@ -176,18 +180,22 @@ public class MainActivity extends AppCompatActivity implements
                     case R.id.bottomBarItemRecent:
                         mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
                         switchFragment(getRecentFragment());
+                        mFAB.setVisibility(View.GONE);
                         break;
                     case R.id.bottomBarItemGroups:
                         mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
                         switchFragment(getGroupFragment());
+                        mFAB.setVisibility(View.VISIBLE);
                         break;
                     case R.id.bottomBarItemResources:
                         mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
                         switchFragment(getResourcesFragment());
+                        mFAB.setVisibility(View.GONE);
                         break;
                     case R.id.bottomBarItemEvents:
                         mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
                         switchFragment(getEventsFragment());
+                        mFAB.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -588,6 +596,12 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
+    public void onNewGroup(View view) {
+        if (view.getId() == R.id.buttonNewGroup) {
+            new CreateGroupAsyncTask(this).execute();
+        }
+    }
+
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
@@ -636,28 +650,76 @@ public class MainActivity extends AppCompatActivity implements
                         getString(R.string.main_alert_dialog_negative_button));
 
                 fragment.show(getSupportFragmentManager(), "signin_error");
+            }
+        }
+    }
 
-                /*
-                mAlertDialog = new AlertDialog.Builder(mContext)
-                        .setPositiveButton(R.string.prof_AlertDialogPositiveButton, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                silentSignIn();
-                                mAlertDialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(R.string.prof_AlertDialogNegativeButton, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // TODO: We need to implement the function for closing the application.
+    private class CreateGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
 
-                            }
-                        })
-                        .setMessage(R.string.prof_AlerDialogMensage)
-                        .setCancelable(true)
-                        .create();
-                mAlertDialog.show();
-                */
+        private Context mContext;
+
+        public CreateGroupAsyncTask(Context context) {
+            mContext = context;
+        }
+
+        /**
+         * Creates a new group record with data introduced by user.
+         * @return GroupRecord
+         */
+        private GroupRecord getNewRecord() {
+            GroupRecord record = new GroupRecord();
+
+            // Set owner reference
+            com.iesnules.apps.campus.backend.group.model.Key groupKey = record.getKey();
+            com.iesnules.apps.campus.backend.user.model.Key userKey = mUserProfile.getUserRecord().getKey();
+            groupKey.setId(userKey.getId());
+            groupKey.setKind(userKey.getKind());
+            groupKey.setName(userKey.getName());
+
+            // Set group data
+            EditText groupNameEditText = (EditText)findViewById(R.id.groupNameEditText);
+            EditText groupDescEditText = (EditText)findViewById(R.id.groupDescEditText);
+            //record.setGroupName(groupNameEditText.getText().toString());
+            //record.setDescription(groupDescEditText.getText().toString());
+
+            return record;
+
+        }
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected GroupRecord doInBackground(Void... params) {
+            GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
+                    getString(R.string.server_credential));
+            credential.setSelectedAccountName(mUserProfile.getUserAccountName());
+
+            Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(), credential);
+            Group service = builder.build();
+
+            GroupRecord record = getNewRecord();
+            try {
+                record = service.create(record).execute();
+            } catch (IOException e) {
+                record = null;
+                e.printStackTrace();
+            }
+
+            return record;
+        }
+
+        protected void onPostExecute(UserRecord record) {
+            if (record != null) { // Update local user profile
+
+            }
+            else { // Error updating user profile
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Error",
+                        getString(R.string.prof_update_error), null, null);
+
+                fragment.show(getSupportFragmentManager(), "update_error");
             }
         }
     }

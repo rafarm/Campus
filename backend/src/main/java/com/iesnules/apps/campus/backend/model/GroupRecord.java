@@ -1,10 +1,10 @@
 package com.iesnules.apps.campus.backend.model;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnSave;
 
 import java.util.ArrayList;
@@ -33,8 +33,20 @@ public class GroupRecord {
 
     public GroupRecord() {}
 
+    /*
     public Long getId() {
         return id;
+    }
+    */
+
+    public Key getKey() {
+        Key key = null;
+
+        if (id != null) {
+            KeyFactory.createKey(this.getClass().getName(), id);
+        }
+
+        return key;
     }
 
     public String getGroupName() {

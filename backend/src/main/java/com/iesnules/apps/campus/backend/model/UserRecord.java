@@ -1,6 +1,7 @@
 package com.iesnules.apps.campus.backend.model;
 
-import com.googlecode.objectify.Key;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -31,8 +32,20 @@ public class UserRecord {
 
     }
 
+    /*
     public Long getId() {
         return id;
+    }
+    */
+
+    public Key getKey() {
+        Key key = null;
+
+        if (id != null) {
+            KeyFactory.createKey(this.getClass().getName(), id);
+        }
+
+        return key;
     }
 
     public String getUserId() {

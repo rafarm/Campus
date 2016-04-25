@@ -4,9 +4,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.NewGroupFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -35,14 +32,14 @@
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:id="@+id/imageView2"
-                android:background="@drawable/ic_fiber_manual_record_black_24dp"
+                android:background="@drawable/ic_fiber_manual_record"
                 android:layout_gravity="center" />
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/imageButton"
-                android:background="@drawable/ic_add_a_photo_black_24dp"
+                android:background="@drawable/ic_add_a_photo"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
 
@@ -51,7 +48,7 @@
         <EditText
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/groupNameEditText"
             android:autoText="false"
             android:hint="@string/group_name"
             android:layout_marginBottom="0dp"
@@ -63,7 +60,7 @@
         <EditText
             android:layout_width="245dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText2"
+            android:id="@+id/groupDescEditText"
             android:layout_marginBottom="0dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
@@ -78,7 +75,8 @@
             android:id="@+id/buttonNewGroup"
             android:layout_gravity="right"
             android:layout_margin="16dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored" />
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:onClick="onNewGroup" />
     </LinearLayout>
 
 </FrameLayout>

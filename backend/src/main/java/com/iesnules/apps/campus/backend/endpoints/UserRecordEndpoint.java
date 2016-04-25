@@ -200,7 +200,7 @@ public class UserRecordEndpoint {
             // Only authenticated user should change her own profile data...
             // TODO: It should be done that way, but currently User.getUserId() returns null...
             //if (userRecord.getId().equals(id)) {
-                checkExists(userRecord.getId());
+                checkExists(userRecord.getKey().getId());
                 ofy().save().entity(userRecord).now();
                 logger.info("Updated UserRecord: " + userRecord);
 
