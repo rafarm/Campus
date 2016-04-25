@@ -189,24 +189,30 @@ public class GroupRecordEndpoint {
             throw new OAuthRequestException("Unauthorized access.");
         }
         else {
-            limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
-            List<GroupRecord> groupRecordCircleGroups = new ArrayList<GroupRecord>(limit);
-            Query<GroupRecord> query = ofy().load().type(GroupRecord.class)
-                    .filter("groupUsers", userId)
-                    .limit(limit);
-            if (cursor != null) {
-                query = query.startAt(Cursor.fromWebSafeString(cursor));
+            UserRecord member = ofy().load().type(UserRecord.class).id(userId).now();
+            if (member == null) {
+                throw new IllegalArgumentException("User doesn't exists.");
             }
-            QueryResultIterator<GroupRecord> groupsIterator = query.iterator();
+            else {
+                limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+                List<GroupRecord> groupRecordGroups = new ArrayList<GroupRecord>(limit);
+                Query<GroupRecord> query = ofy().load().type(GroupRecord.class)
+                        .filter("groupUsers", member)
+                        .limit(limit);
+                if (cursor != null) {
+                    query = query.startAt(Cursor.fromWebSafeString(cursor));
+                }
+                QueryResultIterator<GroupRecord> groupsIterator = query.iterator();
 
-            while (groupsIterator.hasNext()) {
-                groupRecordCircleGroups.add(groupsIterator.next());
+                while (groupsIterator.hasNext()) {
+                    groupRecordGroups.add(groupsIterator.next());
+                }
+
+                response = CollectionResponse.<GroupRecord>builder()
+                        .setItems(groupRecordGroups)
+                        .setNextPageToken(groupsIterator.getCursor().toWebSafeString())
+                        .build();
             }
-
-            response = CollectionResponse.<GroupRecord>builder()
-                    .setItems(groupRecordCircleGroups)
-                    .setNextPageToken(groupsIterator.getCursor().toWebSafeString())
-                    .build();
         }
 
         return response;
