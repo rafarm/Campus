@@ -1,10 +1,12 @@
 package com.iesnules.apps.campus.backend.model;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnSave;
 
 import java.util.ArrayList;
@@ -27,18 +29,18 @@ public class GroupRecord {
     private Date creationDate;
 
     @Index
-    List<Key> groupUsers = new ArrayList<Key>();
+    List<Ref<UserRecord>> groupUsers = new ArrayList<Ref<UserRecord>>();
 
-    Key owner;    // Person is an @Entity
+    @Load
+    Ref<UserRecord> owner;    // Person is an @Entity
 
     public GroupRecord() {}
 
-    /*
     public Long getId() {
         return id;
     }
-    */
 
+    /*
     public Key getKey() {
         Key key = null;
 
@@ -48,6 +50,7 @@ public class GroupRecord {
 
         return key;
     }
+    */
 
     public String getGroupName() {
         return groupName;
@@ -70,16 +73,19 @@ public class GroupRecord {
         return creationDate;
     }
 
-    public List<Key> getGroupUsers() {
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public List<Ref<UserRecord>> getGroupUsers() {
         return groupUsers;
     }
 
-    public Key getOwner() {
-        return owner;
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public UserRecord getOwner() {
+        return owner.get();
     }
 
-    public void setOwner(Key key) {
-        owner = key;
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void setOwner(UserRecord userRecord) {
+        owner = Ref.create(userRecord);
     }
 
     /**

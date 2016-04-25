@@ -32,12 +32,11 @@ public class UserRecord {
 
     }
 
-    /*
     public Long getId() {
         return id;
     }
-    */
 
+    /*
     public Key getKey() {
         Key key = null;
 
@@ -47,7 +46,7 @@ public class UserRecord {
 
         return key;
     }
-
+    */
     public String getUserId() {
         return userId;
     }

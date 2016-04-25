@@ -596,12 +596,6 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
-    public void onNewGroup(View view) {
-        if (view.getId() == R.id.buttonNewGroup) {
-            new CreateGroupAsyncTask(this).execute();
-        }
-    }
-
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
 
         private Context mContext;
@@ -650,76 +644,6 @@ public class MainActivity extends AppCompatActivity implements
                         getString(R.string.main_alert_dialog_negative_button));
 
                 fragment.show(getSupportFragmentManager(), "signin_error");
-            }
-        }
-    }
-
-    private class CreateGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
-
-        private Context mContext;
-
-        public CreateGroupAsyncTask(Context context) {
-            mContext = context;
-        }
-
-        /**
-         * Creates a new group record with data introduced by user.
-         * @return GroupRecord
-         */
-        private GroupRecord getNewRecord() {
-            GroupRecord record = new GroupRecord();
-
-            // Set owner reference
-            com.iesnules.apps.campus.backend.group.model.Key groupKey = record.getKey();
-            com.iesnules.apps.campus.backend.user.model.Key userKey = mUserProfile.getUserRecord().getKey();
-            groupKey.setId(userKey.getId());
-            groupKey.setKind(userKey.getKind());
-            groupKey.setName(userKey.getName());
-
-            // Set group data
-            EditText groupNameEditText = (EditText)findViewById(R.id.groupNameEditText);
-            EditText groupDescEditText = (EditText)findViewById(R.id.groupDescEditText);
-            //record.setGroupName(groupNameEditText.getText().toString());
-            //record.setDescription(groupDescEditText.getText().toString());
-
-            return record;
-
-        }
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected GroupRecord doInBackground(Void... params) {
-            GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
-                    getString(R.string.server_credential));
-            credential.setSelectedAccountName(mUserProfile.getUserAccountName());
-
-            Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), credential);
-            Group service = builder.build();
-
-            GroupRecord record = getNewRecord();
-            try {
-                record = service.create(record).execute();
-            } catch (IOException e) {
-                record = null;
-                e.printStackTrace();
-            }
-
-            return record;
-        }
-
-        protected void onPostExecute(UserRecord record) {
-            if (record != null) { // Update local user profile
-
-            }
-            else { // Error updating user profile
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Error",
-                        getString(R.string.prof_update_error), null, null);
-
-                fragment.show(getSupportFragmentManager(), "update_error");
             }
         }
     }

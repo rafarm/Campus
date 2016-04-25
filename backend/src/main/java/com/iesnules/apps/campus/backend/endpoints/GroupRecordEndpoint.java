@@ -11,6 +11,7 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
@@ -62,10 +63,10 @@ public class GroupRecordEndpoint {
     private static final int DEFAULT_LIST_LIMIT = 20;
 
     @ApiMethod(
-            name = "create",
-            path = "group/",
+            name = "insert",
+            path = "group/{userId}",
             httpMethod = ApiMethod.HttpMethod.POST)
-    public GroupRecord create(GroupRecord groupRecord, User user)
+    public GroupRecord insert(GroupRecord groupRecord,@Named("userId") Long userId, User user)
             throws OAuthRequestException, IllegalArgumentException {
 
         GroupRecord record = null;
@@ -73,15 +74,22 @@ public class GroupRecordEndpoint {
         if (user == null) {
             throw new OAuthRequestException("Unauthorized access.");
         }
-        else if (groupRecord.getKey() != null) {
+        else if (groupRecord.getId() != null) {
             throw new IllegalArgumentException("Group already created.");
         }
         else {
-            ofy().save().entity(groupRecord).now();
-            logger.info("Created GroupRecord: " + groupRecord);
+            UserRecord owner = ofy().load().type(UserRecord.class).id(userId).now();
+            if (owner == null) {
+                throw new IllegalArgumentException("Owner user doesn't exists.");
+            }
+            else {
+                groupRecord.setOwner(owner);
+                groupRecord.getGroupUsers().add(Ref.create(owner));
+                ofy().save().entity(groupRecord).now();
+                logger.info("Created GroupRecord: " + groupRecord);
 
-            record = ofy().load().entity(groupRecord).now();
-
+                record = ofy().load().entity(groupRecord).now();
+            }
         }
 
         return record;
