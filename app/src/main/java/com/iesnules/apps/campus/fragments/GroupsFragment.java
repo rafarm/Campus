@@ -3,9 +3,11 @@ package com.iesnules.apps.campus.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import com.iesnules.apps.campus.adapters.GroupRecyclerViewAdapter;
 import com.iesnules.apps.campus.R;
 import com.iesnules.apps.campus.backend.group.model.GroupRecord;
+import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
 
@@ -24,11 +27,8 @@ import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
  */
 public class GroupsFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private GroupRecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -37,16 +37,12 @@ public class GroupsFragment extends Fragment {
     public GroupsFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static GroupsFragment newInstance(int columnCount) {
+    public static GroupsFragment newInstance() {
         GroupsFragment fragment = new GroupsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
         return fragment;
     }
 
+    /*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +51,7 @@ public class GroupsFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,17 +62,13 @@ public class GroupsFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new GroupRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(mAdapter);
         }
+
         return view;
     }
-
-
+    
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -91,6 +84,10 @@ public class GroupsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setAdapter(GroupRecyclerViewAdapter adapter) {
+        mAdapter = adapter;
     }
 
     public interface OnListFragmentInteractionListener {

@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -79,14 +80,14 @@ public class NewGroupFragment extends DialogFragment {
 
         mGroupNameEditText = (EditText)view.findViewById(R.id.groupNameEditText);
         mGroupDescEditText = (EditText)view.findViewById(R.id.groupDescEditText);
+        ((Button)view.findViewById(R.id.buttonNewGroup)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new CreateGroupAsyncTask(getContext()).execute();
+            }
+        });
 
         return view;
-    }
-
-    public void onNewGroup(View view) {
-        if (view.getId() == R.id.buttonNewGroup) {
-            new CreateGroupAsyncTask(getContext()).execute();
-        }
     }
 
     @Override
@@ -107,7 +108,7 @@ public class NewGroupFragment extends DialogFragment {
     }
 
     public interface OnNewGroupFragmentListener {
-        void onCreateGroup(GroupRecord record);
+        void onCreateGroup(GroupRecord record, NewGroupFragment sender);
     }
 
     private class CreateGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
@@ -130,7 +131,6 @@ public class NewGroupFragment extends DialogFragment {
             record.setDescription(mGroupDescEditText.getText().toString());
 
             return record;
-
         }
 
         @Override
@@ -161,7 +161,7 @@ public class NewGroupFragment extends DialogFragment {
 
         protected void onPostExecute(GroupRecord record) {
             if (record != null) { // Notify listener
-                mListener.onCreateGroup(record);
+                mListener.onCreateGroup(record, NewGroupFragment.this);
             }
             else { // Error creating group
                 ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Error",

@@ -75,8 +75,7 @@
             android:id="@+id/buttonNewGroup"
             android:layout_gravity="right"
             android:layout_margin="16dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:onClick="onNewGroup" />
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored" />
     </LinearLayout>
 
 </FrameLayout>

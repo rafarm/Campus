@@ -22,12 +22,15 @@ import java.util.List;
  */
 public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder> {
 
-    private final SortedList<GroupRecord> mValues;
+    private SortedList<GroupRecord> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public GroupRecyclerViewAdapter(SortedList<GroupRecord> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public GroupRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
         mListener = listener;
+    }
+
+    public void setList(SortedList<GroupRecord> list) {
+        mValues = list;
     }
 
     @Override
@@ -56,7 +59,10 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        if (mValues != null) {
+            return mValues.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

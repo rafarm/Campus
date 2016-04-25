@@ -18,7 +18,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -43,7 +45,9 @@ import com.google.android.gms.plus.Plus;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.iesnules.apps.campus.adapters.GroupRecyclerViewAdapter;
 import com.iesnules.apps.campus.backend.group.Group;
+import com.iesnules.apps.campus.backend.group.model.CollectionResponseGroupRecord;
 import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
@@ -62,6 +66,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.security.KeyFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -106,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements
     //private Stack<Fragment> mEventsFragmentStack;
     private Fragment mCurrentFragment;
     private int mTagCount = 0;
+
+    // Data structures
+    private SortedList<GroupRecord> mGroupsList;
+    private GroupRecyclerViewAdapter mGroupsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,7 +239,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     private GroupsFragment getGroupFragment() {
         if (mGroupsFragment == null) {
-            mGroupsFragment = GroupsFragment.newInstance(1);
+            mGroupsFragment = GroupsFragment.newInstance();
+            mGroupsFragment.setAdapter(getGroupsAdapter());
         }
 
         return mGroupsFragment;
@@ -259,6 +270,43 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return mEventsFragment;
+    }
+
+    private GroupRecyclerViewAdapter getGroupsAdapter() {
+        if (mGroupsAdapter == null) {
+            mGroupsAdapter = new GroupRecyclerViewAdapter(this);
+
+            mGroupsList = new SortedList<GroupRecord>(GroupRecord.class,
+                    new SortedListAdapterCallback<GroupRecord>(mGroupsAdapter) {
+                        @Override
+                        public int compare(GroupRecord o1, GroupRecord o2) {
+                            return (int) (o1.getCreationDate().getValue() - o2.getCreationDate().getValue());
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(GroupRecord oldItem, GroupRecord newItem) {
+                            if (!oldItem.getCreationDate().equals(newItem.getCreationDate())) {
+                                return false;
+                            }
+                            if (!oldItem.getDescription().equals(newItem.getDescription())) {
+                                return false;
+                            }
+                            if (!oldItem.getGroupName().equals(newItem.getGroupName())) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+
+                        @Override
+                        public boolean areItemsTheSame(GroupRecord item1, GroupRecord item2) {
+                            return item1.getId().equals(item2.getId());
+                        }
+                    });
+            mGroupsAdapter.setList(mGroupsList);
+        }
+
+        return mGroupsAdapter;
     }
 
     /**
@@ -584,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(GroupRecord record) {
 
     }
 
@@ -598,8 +646,9 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
-    public void onCreateGroup(GroupRecord record) {
-        //TODO: Insert new group to group list.
+    public void onCreateGroup(GroupRecord record, NewGroupFragment fragment) {
+        mGroupsList.add(record);
+        fragment.dismiss();
     }
 
     private class RegisterUserAsyncTask extends AsyncTask<GoogleSignInAccount, Void, UserProfile> {
@@ -638,6 +687,53 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(UserProfile profile) {
+            if (profile != null) { // User profile exists in backend store
+                mUserProfile = profile;
+                updateUI(true);
+            } else {
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Sign in error",
+                        getString(R.string.main_alert_dialog_message),
+                        getString(R.string.main_alert_dialog_positive_button),
+                        getString(R.string.main_alert_dialog_negative_button));
+
+                fragment.show(getSupportFragmentManager(), "signin_error");
+            }
+        }
+    }
+
+    private class GetUserGroupsAsyncTask extends AsyncTask<Void, Void, List<GroupRecord>> {
+
+        private Context mContext;
+
+        public GetUserGroupsAsyncTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected List<GroupRecord> doInBackground(Void... params) {
+            CollectionResponseGroupRecord records = null;
+
+            Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(),
+                    null);
+
+            Group service = builder.build();
+
+            try {
+                records = service.list().execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (records != null) {
+                return records.getItems();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<GroupRecord> groups) {
             if (profile != null) { // User profile exists in backend store
                 mUserProfile = profile;
                 updateUI(true);
