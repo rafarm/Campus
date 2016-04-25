@@ -11,6 +11,8 @@
     <string name="main_alert_dialog_negative_button">Abort</string>
     <string name="main_alert_dialog_message">Your identity can\'t be validated.</string>
 
+    <string name="groups_alert_dialog_message">Your groups can\'t be retreived.</string>
+
     <!-- Strings related to profile -->
     <string name="prof_nickname">Nickname</string>
     <string name="prof_centername">Center Name</string>

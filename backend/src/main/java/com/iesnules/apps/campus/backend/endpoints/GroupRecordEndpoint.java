@@ -177,12 +177,12 @@ public class GroupRecordEndpoint {
 
     @ApiMethod(
             name = "find",
-            path = "group.find",
+            path = "group.find/{userId}",
             httpMethod = ApiMethod.HttpMethod.GET)
-    private CollectionResponse<GroupRecord> find(@Nullable @Named("cursor") String cursor,
-                                                   @Nullable @Named("limit") Integer limit,
-                                                   @Named("userId") Long userId,
-                                                   User user) throws OAuthRequestException {
+    public CollectionResponse<GroupRecord> find(@Named("userId") Long userId,
+                                                @Nullable @Named("cursor") String cursor,
+                                                @Nullable @Named("limit") Integer limit,
+                                                User user) throws OAuthRequestException {
         CollectionResponse<GroupRecord> response = null;
 
         if (user == null) {

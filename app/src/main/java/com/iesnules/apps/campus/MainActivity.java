@@ -67,6 +67,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mGroupsFragment == null) {
             mGroupsFragment = GroupsFragment.newInstance();
             mGroupsFragment.setAdapter(getGroupsAdapter());
+            new GetUserGroupsAsyncTask(this).execute();
         }
 
         return mGroupsFragment;
@@ -701,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private class GetUserGroupsAsyncTask extends AsyncTask<Void, Void, List<GroupRecord>> {
+    private class GetUserGroupsAsyncTask extends AsyncTask<Void, Void, CollectionResponseGroupRecord> {
 
         private Context mContext;
 
@@ -710,40 +712,39 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected List<GroupRecord> doInBackground(Void... params) {
-            CollectionResponseGroupRecord records = null;
+        protected CollectionResponseGroupRecord doInBackground(Void... params) {
+            CollectionResponseGroupRecord response = null;
+
+            GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
+                    getString(R.string.server_credential));
+            credential.setSelectedAccountName(mUserProfile.getUserAccountName());
 
             Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(),
-                    null);
+                    new AndroidJsonFactory(), credential);
 
             Group service = builder.build();
 
             try {
-                records = service.list().execute();
+                response = service.find(mUserProfile.getUserRecord().getId()).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if (records != null) {
-                return records.getItems();
-            }
-
-            return null;
+            return response;
         }
 
         @Override
-        protected void onPostExecute(List<GroupRecord> groups) {
-            if (profile != null) { // User profile exists in backend store
-                mUserProfile = profile;
-                updateUI(true);
+        protected void onPostExecute(CollectionResponseGroupRecord response) {
+            if (response != null) { // User profile exists in backend store
+                List<GroupRecord> groups = response.getItems();
+                if (groups != null) {
+                    mGroupsList.addAll(groups);
+                }
             } else {
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Sign in error",
-                        getString(R.string.main_alert_dialog_message),
-                        getString(R.string.main_alert_dialog_positive_button),
-                        getString(R.string.main_alert_dialog_negative_button));
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Groups error",
+                        getString(R.string.groups_alert_dialog_message), null, null);
 
-                fragment.show(getSupportFragmentManager(), "signin_error");
+                fragment.show(getSupportFragmentManager(), "groups_error");
             }
         }
     }
