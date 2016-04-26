@@ -66,7 +66,7 @@ public class NewGroupFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getDialog().setTitle(getResources().getString(R.string.create_new_group));
         if (getArguments() != null) {
             mUserId = getArguments().getLong(ARG_USER_ID);
         }
