@@ -454,8 +454,7 @@ public class MainActivity extends AppCompatActivity implements
             pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult result) {
-                    handleSignInResult(result);
-                    hideProgressIndicator();
+                    handleSignInResult(result)
                 }
             });
         }
@@ -689,6 +688,7 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(UserProfile profile) {
+            hideProgressIndicator();
             if (profile != null) { // User profile exists in backend store
                 mUserProfile = profile;
                 updateUI(true);
@@ -709,6 +709,11 @@ public class MainActivity extends AppCompatActivity implements
 
         public GetUserGroupsAsyncTask(Context context) {
             mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgressIndicator();
         }
 
         @Override
@@ -735,6 +740,7 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(CollectionResponseGroupRecord response) {
+            hideProgressIndicator();
             if (response != null) { // User profile exists in backend store
                 List<GroupRecord> groups = response.getItems();
                 if (groups != null) {
