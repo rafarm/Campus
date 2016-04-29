@@ -222,22 +222,36 @@ public class GroupRecordEndpoint {
             name = "addUser",
             path = "group.addUser/{userId}",
             httpMethod = ApiMethod.HttpMethod.PUT)
-    public GroupRecord addUser(@Named("userId") Long userId, User user)
+    public GroupRecord addUser(GroupRecord groupRecord, @Named("userId") Long userId, User user)
             throws OAuthRequestException {
+
+        GroupRecord record = null;
+
         if (user == null) {
             throw new OAuthRequestException("Unauthorized access.");
         }
         else {
             UserRecord userRec = ofy().load().type(UserRecord.class).id(userId).now();
             if (userRec == null){
-                throw new OAuthRequestException("The member it's already in the group.");
+                throw new OAuthRequestException("The member it isn't already in the group.");
             }
             else{
-                groupRecord.getGroupUsers().add(Ref.create(owner));
-                ofy().save().entity(groupRecord).now();
-                logger.info("Created GroupRecord: " + groupRecord);
+                List users = groupRecord.getGroupUsers();
+                Ref<UserRecord> userRef = Ref.create(userRec);
+
+                if (!users.contains(userRef)){
+                    users.add(userRef);
+                    ofy().save().entity(groupRecord).now();
+                    logger.info("Added: " + userId);
+
+
+                }
+                else{
+                    throw new OAuthRequestException("The member it is already in the group. ");
+                }
 
                 record = ofy().load().entity(groupRecord).now();
+
 
             }
 
@@ -246,6 +260,47 @@ public class GroupRecordEndpoint {
 
     }
 
+    @ApiMethod(
+            name = "removeUser",
+            path = "group.removeUser/{userId}",
+            httpMethod = ApiMethod.HttpMethod.PUT)
+    public GroupRecord removeUser(GroupRecord groupRecord, @Named("userId") Long userId, User user)
+            throws OAuthRequestException {
+
+        GroupRecord record = null;
+
+        if (user == null) {
+            throw new OAuthRequestException("Unauthorized access.");
+        }
+        else {
+            UserRecord userRec = ofy().load().type(UserRecord.class).id(userId).now();
+            if (userRec == null){
+                throw new OAuthRequestException("The member it isn't already in the group.");
+            }
+            else{
+                List users = groupRecord.getGroupUsers();
+                Ref<UserRecord> userRef = Ref.create(userRec);
+
+                if (users.contains(userRef)){
+                    users.remove(userRef);
+                    ofy().save().entity(groupRecord).now();
+                    logger.info("REmoved: " + userId);
+
+
+                }
+                else{
+                    throw new OAuthRequestException("The member it's in the group yet. ");
+                }
+
+                record = ofy().load().entity(groupRecord).now();
+
+
+            }
+
+        }
+        return record;
+
+    }
     private void checkExists(Long id) throws NotFoundException {
         try {
             ofy().load().type(GroupRecord.class).id(id).safe();
