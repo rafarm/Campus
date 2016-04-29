@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 NewGroupFragment newGroupFragment = NewGroupFragment
                         .newInstance(mUserProfile.getUserRecord().getId());
-                // Show DialogFragment
+                // Show DialogFragment+
                 newGroupFragment.show(getSupportFragmentManager(), "Dialog Fragment");
             }
         });

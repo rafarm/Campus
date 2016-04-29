@@ -10,6 +10,16 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarNewGroup"
+            android:visibility="invisible"
+            android:indeterminate="true"
+            android:layout_gravity="top"
+            android:layout_marginTop="-7dp" />
+
         <EditText
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -33,14 +43,32 @@
             android:hint="@string/description"
             android:textColorHint="#bdbdbd" />
 
-        <Button
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/create"
-            android:id="@+id/buttonNewGroup"
             android:layout_gravity="right"
-            android:layout_margin="16dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored" />
+            android:layout_margin="16dp">
+
+            <Button
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:id="@+id/buttonDeleteNewGroup"
+                android:layout_gravity="right" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create"
+                android:id="@+id/buttonNewGroup"
+                android:layout_gravity="right"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_marginRight="5dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>
