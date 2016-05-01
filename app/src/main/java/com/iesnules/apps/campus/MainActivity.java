@@ -485,8 +485,10 @@ public class MainActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             mSigningIn = false;
 
-            // Register user into the backend
-            new RegisterUserAsyncTask(this).execute(result.getSignInAccount());
+            // Register user into the backend if not already registered
+            if (mUserProfile == null) {
+                new RegisterUserAsyncTask(this).execute(result.getSignInAccount());
+            }
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
