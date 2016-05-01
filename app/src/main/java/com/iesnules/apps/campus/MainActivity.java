@@ -2,7 +2,6 @@ package com.iesnules.apps.campus;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -14,7 +13,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.media.VolumeProviderCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,13 +24,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -54,7 +49,6 @@ import com.iesnules.apps.campus.backend.group.model.CollectionResponseGroupRecor
 import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
-import com.iesnules.apps.campus.dummy.DummyContent;
 import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.fragments.EventsFragment;
 import com.iesnules.apps.campus.fragments.GroupsFragment;
@@ -63,14 +57,13 @@ import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
 import com.iesnules.apps.campus.utils.RoundedTransformation;
+//import com.roughike.bottombar.BottomBar;
+//import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.security.KeyFactory;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
@@ -104,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements
     private final int BOTTOMBAR_ITEM_GROUPS_POSITION = 1;
     private final int BOTTOMBAR_ITEM_RESOURCES_POSITION = 2;
     private final int BOTTOMBAR_ITEM_EVENTS_POSITION = 3;
+
+    private OnMenuTabClickListener mBottomBarTabListener;
 
     // Fragments
     private RecentFragment mRecentFragment;
@@ -189,38 +184,16 @@ public class MainActivity extends AppCompatActivity implements
 
         // Bottom bar...
         mBottomBar = BottomBar.attach(mCoordinatorLayout, savedInstanceState);
-        mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
-            @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.bottomBarItemRecent:
-                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
-                        switchFragment(getRecentFragment());
-                        mFAB.setVisibility(View.GONE);
-                        break;
-                    case R.id.bottomBarItemGroups:
-                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
-                        switchFragment(getGroupFragment());
-                        mFAB.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.bottomBarItemResources:
-                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
-                        switchFragment(getResourcesFragment());
-                        mFAB.setVisibility(View.GONE);
-                        break;
-                    case R.id.bottomBarItemEvents:
-                        mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
-                        switchFragment(getEventsFragment());
-                        mFAB.setVisibility(View.GONE);
-                        break;
-                }
-            }
+        mBottomBar.noTopOffset();
+        mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, getBottomBarTabListener());
+        mBottomBar.setEnabled(false);
+    }
 
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-            }
-        });
+        mBottomBar.onSaveInstanceState(outState);
     }
 
     /**
@@ -275,6 +248,45 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return mEventsFragment;
+    }
+
+    private OnMenuTabClickListener getBottomBarTabListener() {
+        if (mBottomBarTabListener == null) {
+            mBottomBarTabListener = new OnMenuTabClickListener() {
+                @Override
+                public void onMenuTabSelected(@IdRes int menuItemId) {
+                    switch (menuItemId) {
+                        case R.id.bottomBarItemRecent:
+                            mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
+                            switchFragment(getRecentFragment());
+                            mFAB.setVisibility(View.GONE);
+                            break;
+                        case R.id.bottomBarItemGroups:
+                            mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
+                            switchFragment(getGroupFragment());
+                            mFAB.setVisibility(View.VISIBLE);
+                            break;
+                        case R.id.bottomBarItemResources:
+                            mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
+                            switchFragment(getResourcesFragment());
+                            mFAB.setVisibility(View.GONE);
+                            break;
+                        case R.id.bottomBarItemEvents:
+                            mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
+                            switchFragment(getEventsFragment());
+                            mFAB.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onMenuTabReSelected(@IdRes int menuItemId) {
+
+                }
+            };
+        }
+
+        return mBottomBarTabListener;
     }
 
     private GroupRecyclerViewAdapter getGroupsAdapter() {
@@ -363,19 +375,6 @@ public class MainActivity extends AppCompatActivity implements
         );
         AppIndex.AppIndexApi.start(mGoogleApiClient, viewAction);
         */
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.iesnules.apps.campus/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(mGoogleApiClient, viewAction);
     }
 
     /*
@@ -470,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements
             pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult result) {
-                    handleSignInResult(result)
+                    handleSignInResult(result);
                 }
             });
         }
@@ -576,26 +575,19 @@ public class MainActivity extends AppCompatActivity implements
 
     private void enableUI(boolean enable) {
         mBottomBar.setEnabled(enable);
-        mDrawerNavigationView.setEnabled(enable);
+        Menu drawerMenu = mDrawerNavigationView.getMenu();
+        drawerMenu.findItem(R.id.nav_profile).setEnabled(enable);
+        drawerMenu.findItem(R.id.bottomBarItemRecent).setEnabled(enable);
+        drawerMenu.findItem(R.id.bottomBarItemGroups).setEnabled(enable);
+        drawerMenu.findItem(R.id.bottomBarItemResources).setEnabled(enable);
+        drawerMenu.findItem(R.id.bottomBarItemEvents).setEnabled(enable);
+
         mFAB.setEnabled(enable);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.iesnules.apps.campus/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(mGoogleApiClient, viewAction);
         /*
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -728,11 +720,11 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(UserProfile profile) {
-            enableUI(true);
             hideProgressIndicator();
             if (profile != null) { // User profile exists in backend store
                 mUserProfile = profile;
                 updateUI(true);
+                enableUI(true);
             } else {
                 ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Sign in error",
                         getString(R.string.main_alert_dialog_message),
@@ -761,19 +753,21 @@ public class MainActivity extends AppCompatActivity implements
         protected CollectionResponseGroupRecord doInBackground(Void... params) {
             CollectionResponseGroupRecord response = null;
 
-            GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
-                    getString(R.string.server_credential));
-            credential.setSelectedAccountName(mUserProfile.getUserAccountName());
+            if (mUserProfile != null) {
+                GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
+                        getString(R.string.server_credential));
+                credential.setSelectedAccountName(mUserProfile.getUserAccountName());
 
-            Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), credential);
+                Group.Builder builder = new Group.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), credential);
 
-            Group service = builder.build();
+                Group service = builder.build();
 
-            try {
-                response = service.find(mUserProfile.getUserRecord().getId()).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    response = service.find(mUserProfile.getUserRecord().getId()).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             return response;
