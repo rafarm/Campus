@@ -463,9 +463,7 @@ public class MainActivity extends AppCompatActivity implements
         if (pendingResult.isDone()) {
             handleSignInResult(pendingResult.get());
         } else {
-            // There's no immediate result ready, displays some progress indicator and waits for the
-            // async callback.
-            showProgressIndicator();
+            // There's no immediate result ready, wait for the async callback.
             pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult result) {
@@ -691,6 +689,7 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         protected void onPreExecute() {
+            showProgressIndicator();
             enableUI(false);
         }
 
