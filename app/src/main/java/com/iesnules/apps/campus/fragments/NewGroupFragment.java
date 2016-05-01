@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -41,8 +42,10 @@ public class NewGroupFragment extends DialogFragment {
 
     private EditText mGroupNameEditText;
     private EditText mGroupDescEditText;
+    private ProgressBar mProgressBarNewGroup;
 
     private OnNewGroupFragmentListener mListener;
+
 
     public NewGroupFragment() {
         // Required empty public constructor
@@ -66,7 +69,6 @@ public class NewGroupFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mUserId = getArguments().getLong(ARG_USER_ID);
         }
@@ -77,9 +79,18 @@ public class NewGroupFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_group, container, false);
-
+        getDialog().setTitle(R.string.create_new_group);
         mGroupNameEditText = (EditText)view.findViewById(R.id.groupNameEditText);
         mGroupDescEditText = (EditText)view.findViewById(R.id.groupDescEditText);
+        mProgressBarNewGroup = (ProgressBar)view.findViewById(R.id.progressBarNewGroup);
+
+        ((Button)view.findViewById(R.id.buttonDeleteNewGroup)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
         ((Button)view.findViewById(R.id.buttonNewGroup)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +146,7 @@ public class NewGroupFragment extends DialogFragment {
 
         @Override
         protected void onPreExecute() {
-
+            mProgressBarNewGroup.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -160,6 +171,7 @@ public class NewGroupFragment extends DialogFragment {
         }
 
         protected void onPostExecute(GroupRecord record) {
+
             if (record != null) { // Notify listener
                 mListener.onCreateGroup(record, NewGroupFragment.this);
             }
@@ -169,6 +181,7 @@ public class NewGroupFragment extends DialogFragment {
 
                 fragment.show(getActivity().getSupportFragmentManager(), "create_group_error");
             }
+            mProgressBarNewGroup.setVisibility(View.GONE);
         }
     }
 }
