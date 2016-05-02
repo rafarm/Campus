@@ -66,7 +66,7 @@ public class GroupsFragment extends Fragment {
         // Show FAB for this fragment
         FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-        AnimatorSet set = (AnimatorSet)AnimatorInflater.loadAnimator(getContext(), R.anim.fab_animation_in);
+        AnimatorSet set = (AnimatorSet)AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_in);
         set.setTarget(fab);
         set.start();
 

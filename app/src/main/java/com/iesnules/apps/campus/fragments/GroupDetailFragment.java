@@ -65,7 +65,7 @@ public class GroupDetailFragment extends Fragment {
 
         // Hide FAB for this fragment
         FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
-        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.anim.fab_animation_out);
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
         set.setTarget(fab);
         set.start();
 
