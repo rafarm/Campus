@@ -233,7 +233,7 @@ public class GroupRecordEndpoint {
         else {
             UserRecord userRec = ofy().load().type(UserRecord.class).id(userId).now();
             if (userRec == null){
-                throw new OAuthRequestException("The member it isn't already in the group.");
+                throw new OAuthRequestException("User doesn't exists.");
             }
             else{
                 List users = groupRecord.getGroupUsers();
@@ -247,14 +247,13 @@ public class GroupRecordEndpoint {
 
                 }
                 else{
-                    throw new OAuthRequestException("The member it is already in the group. ");
+                    throw new OAuthRequestException("The user is already in the group.");
                 }
 
                 record = ofy().load().entity(groupRecord).now();
 
 
             }
-
         }
         return record;
 
@@ -275,7 +274,7 @@ public class GroupRecordEndpoint {
         else {
             UserRecord userRec = ofy().load().type(UserRecord.class).id(userId).now();
             if (userRec == null){
-                throw new OAuthRequestException("The member it isn't already in the group.");
+                throw new OAuthRequestException("User doesn't exists.");
             }
             else{
                 List users = groupRecord.getGroupUsers();
@@ -284,17 +283,13 @@ public class GroupRecordEndpoint {
                 if (users.contains(userRef)){
                     users.remove(userRef);
                     ofy().save().entity(groupRecord).now();
-                    logger.info("REmoved: " + userId);
-
-
+                    logger.info("Removed: " + userId);
                 }
                 else{
-                    throw new OAuthRequestException("The member it's in the group yet. ");
+                    throw new OAuthRequestException("The user is not in the group yet.");
                 }
 
                 record = ofy().load().entity(groupRecord).now();
-
-
             }
 
         }

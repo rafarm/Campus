@@ -64,6 +64,10 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Hide FAB for this fragment
+        getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_events, container, false);
     }

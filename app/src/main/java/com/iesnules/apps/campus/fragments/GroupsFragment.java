@@ -22,13 +22,14 @@ import com.iesnules.apps.campus.dummy.DummyContent.DummyItem;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnGroupsFragmentListener}
  * interface.
  */
 public class GroupsFragment extends Fragment {
 
-    private OnListFragmentInteractionListener mListener;
+    private OnGroupsFragmentListener mListener;
     private GroupRecyclerViewAdapter mAdapter;
+    private RecyclerView mListView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,14 +57,18 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Show FAB for this fragment
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+
         View view = inflater.inflate(R.layout.fragment_groups_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(mAdapter);
+            mListView = (RecyclerView) view;
+            //recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            mListView.setAdapter(mAdapter);
         }
 
         return view;
@@ -72,8 +77,8 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnGroupsFragmentListener) {
+            mListener = (OnGroupsFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -90,7 +95,7 @@ public class GroupsFragment extends Fragment {
         mAdapter = adapter;
     }
 
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(GroupRecord item);
+    public interface OnGroupsFragmentListener {
+        void onGroupSelected(int index);
     }
 }

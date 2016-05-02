@@ -51,25 +51,25 @@ import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
 import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.fragments.EventsFragment;
+import com.iesnules.apps.campus.fragments.GroupDetailFragment;
 import com.iesnules.apps.campus.fragments.GroupsFragment;
 import com.iesnules.apps.campus.fragments.NewGroupFragment;
 import com.iesnules.apps.campus.fragments.RecentFragment;
 import com.iesnules.apps.campus.fragments.ResourcesFragment;
 import com.iesnules.apps.campus.model.UserProfile;
 import com.iesnules.apps.campus.utils.RoundedTransformation;
-//import com.roughike.bottombar.BottomBar;
-//import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         NavigationView.OnNavigationItemSelectedListener,
-        GroupsFragment.OnListFragmentInteractionListener,
+        GroupsFragment.OnGroupsFragmentListener,
         ErrorDialogFragment.ErrorDialogListener,
         NewGroupFragment.OnNewGroupFragmentListener {
 
@@ -101,15 +101,16 @@ public class MainActivity extends AppCompatActivity implements
     private OnMenuTabClickListener mBottomBarTabListener;
 
     // Fragments
-    private RecentFragment mRecentFragment;
-    private GroupsFragment mGroupsFragment;
-    private ResourcesFragment mResourcesFragment;
-    private EventsFragment mEventsFragment;
-    //private Stack<Fragment> mRecentFragmentStack;
-    //private Stack<Fragment> mGroupsFragmentStack;
-    //private Stack<Fragment> mResourcesFragmentStack;
-    //private Stack<Fragment> mEventsFragmentStack;
-    private Fragment mCurrentFragment;
+    //private RecentFragment mRecentFragment;
+    //private GroupsFragment mGroupsFragment;
+    //private ResourcesFragment mResourcesFragment;
+    //private EventsFragment mEventsFragment;
+    private Stack<Fragment> mRecentFragmentStack;
+    private Stack<Fragment> mGroupsFragmentStack;
+    private Stack<Fragment> mResourcesFragmentStack;
+    private Stack<Fragment> mEventsFragmentStack;
+    private Stack<Fragment> mCurrentFragmentStack;
+    //private Fragment mCurrentFragment;
     private int mTagCount = 0;
 
     // Data structures
@@ -197,57 +198,62 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Lazily create recent fragment.
+     * Lazily create recent fragment stack.
      *
-     * @return RecentFragment
+     * @return Stack<Fragment>
      */
-    private RecentFragment getRecentFragment() {
-        if (mRecentFragment == null) {
-            mRecentFragment = RecentFragment.newInstance("Recent", "Activities");
+    private Stack<Fragment> getRecentFragmentStack() {
+        if (mRecentFragmentStack == null) {
+            mRecentFragmentStack = new Stack<Fragment>();
+            mRecentFragmentStack.push(RecentFragment.newInstance("Recent", "Activities"));
         }
 
-        return mRecentFragment;
+        return mRecentFragmentStack;
     }
 
     /**
-     * Lazily create groups fragment.
+     * Lazily create groups fragment stack.
      *
-     * @return GroupsFragment
+     * @return Stack<Fragment>
      */
-    private GroupsFragment getGroupFragment() {
-        if (mGroupsFragment == null) {
-            mGroupsFragment = GroupsFragment.newInstance();
-            mGroupsFragment.setAdapter(getGroupsAdapter());
+    private Stack<Fragment> getGroupsFragmentStack() {
+        if (mGroupsFragmentStack == null) {
+            mGroupsFragmentStack = new Stack<Fragment>();
+            GroupsFragment fragment = GroupsFragment.newInstance();
+            fragment.setAdapter(getGroupsAdapter());
             new GetUserGroupsAsyncTask(this).execute();
+            mGroupsFragmentStack.push(fragment);
         }
 
-        return mGroupsFragment;
+        return mGroupsFragmentStack;
     }
 
     /**
-     * Lazily create resources fragment.
+     * Lazily create resources fragment stack.
      *
-     * @return ResourcesFragment
+     * @return Stack<Fragment>
      */
-    private ResourcesFragment getResourcesFragment() {
-        if (mResourcesFragment == null) {
-            mResourcesFragment = ResourcesFragment.newInstance("Resources", "List");
+    private Stack<Fragment> getResourcesFragmentStack() {
+        if (mResourcesFragmentStack == null) {
+            mResourcesFragmentStack = new Stack<Fragment>();
+            mResourcesFragmentStack.push(ResourcesFragment.newInstance("Resources", "List"));
         }
 
-        return mResourcesFragment;
+        return mResourcesFragmentStack;
     }
 
     /**
-     * Lazily create events fragment.
+     * Lazily create events fragment stack.
      *
-     * @return EventsFragment
+     * @return Stack<Fragment>
      */
-    private EventsFragment getEventsFragment() {
-        if (mEventsFragment == null) {
-            mEventsFragment = EventsFragment.newInstance("Events", "List");
+    private Stack<Fragment> getEventsFragmentStack() {
+        if (mEventsFragmentStack == null) {
+            mEventsFragmentStack = new Stack<Fragment>();
+            mEventsFragmentStack.push(EventsFragment.newInstance("Events", "List"));
         }
 
-        return mEventsFragment;
+        return mEventsFragmentStack;
     }
 
     private OnMenuTabClickListener getBottomBarTabListener() {
@@ -258,23 +264,19 @@ public class MainActivity extends AppCompatActivity implements
                     switch (menuItemId) {
                         case R.id.bottomBarItemRecent:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
-                            switchFragment(getRecentFragment());
-                            mFAB.setVisibility(View.GONE);
+                            switchFragmentStack(getRecentFragmentStack());
                             break;
                         case R.id.bottomBarItemGroups:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
-                            switchFragment(getGroupFragment());
-                            mFAB.setVisibility(View.VISIBLE);
+                            switchFragmentStack(getGroupsFragmentStack());
                             break;
                         case R.id.bottomBarItemResources:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
-                            switchFragment(getResourcesFragment());
-                            mFAB.setVisibility(View.GONE);
+                            switchFragmentStack(getResourcesFragmentStack());
                             break;
                         case R.id.bottomBarItemEvents:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
-                            switchFragment(getEventsFragment());
-                            mFAB.setVisibility(View.GONE);
+                            switchFragmentStack(getEventsFragmentStack());
                             break;
                     }
                 }
@@ -329,15 +331,17 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Switch to a new fragment stack.
      *
-     * @param newFragment
+     * @param newFragmentStack
      */
-    private void switchFragment(Fragment newFragment) {
+    private void switchFragmentStack(Stack<Fragment> newFragmentStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if (mCurrentFragment != null) {
-            transaction.detach(mCurrentFragment);
+        if (mCurrentFragmentStack != null) {
+            Fragment currentFragment = mCurrentFragmentStack.peek();
+            transaction.detach(currentFragment);
         }
 
+        Fragment newFragment = newFragmentStack.peek();
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(newFragment.getTag());
         if (fragment != null) {
             transaction.attach(fragment);
@@ -345,7 +349,52 @@ public class MainActivity extends AppCompatActivity implements
             transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
                     mTagCount++);
         }
-        mCurrentFragment = newFragment;
+
+        mCurrentFragmentStack = newFragmentStack;
+
+        transaction.commit();
+    }
+
+    /**
+     * Push a new fragment.
+     *
+     * @param newFragment
+     */
+    private void pushFragment(Fragment newFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (mCurrentFragmentStack != null) {
+            Fragment currentFragment = mCurrentFragmentStack.peek();
+            transaction.detach(currentFragment);
+        }
+
+        transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
+                mTagCount++);
+
+        mCurrentFragmentStack.push(newFragment);
+
+        transaction.commit();
+    }
+
+    /**
+     * Pop current fragment.
+     */
+    private void popFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (mCurrentFragmentStack != null) {
+            Fragment currentFragment = mCurrentFragmentStack.pop();
+            transaction.remove(currentFragment);
+
+            Fragment newFragment = mCurrentFragmentStack.peek();
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(newFragment.getTag());
+            if (fragment != null) {
+                transaction.attach(fragment);
+            } else {
+                transaction.add(R.id.fragment_container, newFragment, newFragment.getClass().getName() +
+                        mTagCount++);
+            }
+        }
 
         transaction.commit();
     }
@@ -654,14 +703,16 @@ public class MainActivity extends AppCompatActivity implements
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (mCurrentFragmentStack.size() > 1) {
+            popFragment();
         } else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public void onListFragmentInteraction(GroupRecord record) {
-
+    public void onGroupSelected(int index) {
+        pushFragment(GroupDetailFragment.newInstance(index));
     }
 
     @Override
