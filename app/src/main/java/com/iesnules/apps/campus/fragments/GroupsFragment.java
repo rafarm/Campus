@@ -1,7 +1,11 @@
 package com.iesnules.apps.campus.fragments;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,6 +15,7 @@ import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import com.iesnules.apps.campus.adapters.GroupRecyclerViewAdapter;
 import com.iesnules.apps.campus.R;
@@ -59,7 +64,11 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Show FAB for this fragment
-        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        AnimatorSet set = (AnimatorSet)AnimatorInflater.loadAnimator(getContext(), R.anim.fab_animation_in);
+        set.setTarget(fab);
+        set.start();
 
         View view = inflater.inflate(R.layout.fragment_groups_list, container, false);
 

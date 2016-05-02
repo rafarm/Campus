@@ -1,13 +1,18 @@
 package com.iesnules.apps.campus.fragments;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.iesnules.apps.campus.R;
@@ -59,7 +64,10 @@ public class GroupDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Hide FAB for this fragment
-        getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
+        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.anim.fab_animation_out);
+        set.setTarget(fab);
+        set.start();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_detail, container, false);
