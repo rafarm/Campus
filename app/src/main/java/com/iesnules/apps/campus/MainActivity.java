@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
     private int mTagCount = 0;
 
     // Data structures
-    private SortedList<GroupRecord> mGroupsList;
+    private static SortedList<GroupRecord> mGroupsList;
     private GroupRecyclerViewAdapter mGroupsAdapter;
 
     @Override
@@ -473,6 +473,15 @@ public class MainActivity extends AppCompatActivity implements
      */
     public static UserProfile getUserProfile() {
         return mUserProfile;
+    }
+
+    /**
+     * Group records getter.
+     *
+     * @return SortedList<GroupRecord>
+     */
+    public static SortedList<GroupRecord> getGroupsList() {
+        return mGroupsList;
     }
 
     @Override
