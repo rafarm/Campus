@@ -402,8 +402,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
             silentSignIn();
@@ -551,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (!mSigningIn ||
                     result.getStatus().getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
+                mUserProfile = null;
                 signIn();
             }
         }
