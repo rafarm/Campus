@@ -43,12 +43,14 @@ public class ProfileActivity extends AppCompatActivity
     private TextView mGoogleNameTextView;
     private FABProgressCircle mUpdateFABCircle;
     private FloatingActionButton mUpdateFAB;
+    private FloatingActionButton mEditFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+
 
         mProfile = MainActivity.getUserProfile();
 
@@ -61,11 +63,20 @@ public class ProfileActivity extends AppCompatActivity
         mGooglePhotoImageView = (ImageView)findViewById(R.id.googlePhoto);
         mUpdateFABCircle = (FABProgressCircle)findViewById(R.id.updateFabProgressCircle);
         mUpdateFAB = (FloatingActionButton)findViewById(R.id.updateFab);
-
+        mEditFAB = (FloatingActionButton)findViewById(R.id.editFab);
         mUpdateFABCircle.attachListener(this);
+        ifEditProfileUI(false);
 
+        mEditFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ifEditProfileUI(true);
+            }
+        });
         populateUI();
+
     }
+
 
     private void populateUI() {
         mGoogleNameTextView.setText(mProfile.getGoogleAccount().getDisplayName());
@@ -88,17 +99,31 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //TODO: Add conditions to change editable textedits...
-            case R.id.edit_profile:
-                ;
-
             case android.R.id.home:
                 onBackPressed();
         }
 
         return true;
     }
-//Edit button
+
+//Update UI
+    private void ifEditProfileUI(boolean a) {
+        mNickNameEditText.setEnabled(a);
+        mCenterNameEditText.setEnabled(a);
+        mDescriptionEdiText.setEnabled(a);
+        mStudiesTypeEditText.setEnabled(a);
+        mTwitterEditText.setEnabled(a);
+        if (a == true){
+            mUpdateFAB.setVisibility(View.VISIBLE);
+            mEditFAB.setVisibility(View.GONE);
+            mUpdateFABCircle.setVisibility(View.VISIBLE);}
+        else {
+            mUpdateFAB.setVisibility(View.GONE);
+            mEditFAB.setVisibility(View.VISIBLE);
+            mUpdateFABCircle.setVisibility(View.GONE);}
+
+    }
+
     /**
      * Listener methods
      */
@@ -115,6 +140,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onFABProgressAnimationEnd() {
         mUpdateFAB.setEnabled(true);
+        ifEditProfileUI(false);
     }
 
     private class UpdateUserProfileAsyncTask extends AsyncTask<Void, Void, UserRecord> {
@@ -143,6 +169,7 @@ public class ProfileActivity extends AppCompatActivity
         protected void onPreExecute() {
             mUpdateFAB.setEnabled(false);
             mUpdateFABCircle.show();
+
         }
 
         @Override
@@ -180,6 +207,7 @@ public class ProfileActivity extends AppCompatActivity
 
                 fragment.show(getSupportFragmentManager(), "update_error");
             }
+
         }
     }
 }

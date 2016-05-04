@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.view.inputmethod.InputMethodManager;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -48,6 +49,7 @@ public class NewGroupFragment extends DialogFragment {
     private EditText mGroupDescEditText;
     private ProgressBar mProgressBarNewGroup;
     private Button mButtonCreateNewGroup;
+    private TextView mEmptyNameTextView;
 
     private OnNewGroupFragmentListener mListener;
 
@@ -88,7 +90,9 @@ public class NewGroupFragment extends DialogFragment {
         mGroupNameEditText = (EditText)view.findViewById(R.id.groupNameEditText);
         mGroupDescEditText = (EditText)view.findViewById(R.id.groupDescEditText);
         mProgressBarNewGroup = (ProgressBar)view.findViewById(R.id.progressBarNewGroup);
-        mButtonCreateNewGroup = ((Button)view.findViewById(R.id.buttonDeleteNewGroup));
+        mButtonCreateNewGroup = ((Button)view.findViewById(R.id.buttonNewGroup));
+        mEmptyNameTextView = (TextView)view.findViewById(R.id.emptyNameTextView);
+
 
         ((Button)view.findViewById(R.id.buttonDeleteNewGroup)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,36 +101,24 @@ public class NewGroupFragment extends DialogFragment {
             }
         });
 
-
-        mGroupNameEditText.addTextChangedListener(new TextWatcher() {
-
+        mButtonCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Check if 's' is empty
-                mButtonCreateNewGroup.setEnabled(true);
-                mButtonCreateNewGroup.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new CreateGroupAsyncTask(getContext()).execute();
-                    }
-                });
+            public void onClick(View view) {
+                isEmpty();
             }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count,
-                int after) {
-                    // TODO Auto-generated method stub
-                    mButtonCreateNewGroup.setEnabled(false);
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    // TODO Auto-generated method stub
-
-                }
-            });
+        });
 
         return view;
+    }
+
+    private void isEmpty() {
+        if (mGroupNameEditText.getText().toString().trim().length() == 0){
+            mEmptyNameTextView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mEmptyNameTextView.setVisibility(View.GONE);
+            new CreateGroupAsyncTask(getContext()).execute();
+        }
     }
 
     @Override

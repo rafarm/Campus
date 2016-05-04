@@ -32,6 +32,16 @@
             android:textColorHint="#bdbdbd"
             android:inputType="text" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/empty_group_error"
+            android:id="@+id/emptyNameTextView"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/colorAccent"
+            android:visibility="gone" />
+
         <EditText
             android:layout_width="245dp"
             android:layout_height="wrap_content"

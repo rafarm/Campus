@@ -44,6 +44,6 @@
     <string name="group_name">Group Name</string>
     <string name="description">Add description</string>
     <string name="group_create_error">Error creating group</string>
-    <string name="empty_group_error">* Grouo name cannot be empty</string>
+    <string name="empty_group_error">*Group name cannot be empty</string>
 
 </resources>

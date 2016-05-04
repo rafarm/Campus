@@ -120,6 +120,7 @@
             android:textSize="16dp" />
 
         <RelativeLayout
+            android:id="@+id/updaterFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end">
@@ -138,9 +139,18 @@
                     android:src="@drawable/ic_backup"
                     android:onClick="onUpdate"
                     android:tint="#ffffff"
-                    app:backgroundTint="@android:color/holo_green_dark" />
+                    app:backgroundTint="@color/colorAccent" />
+
 
             </com.github.jorgecastilloprz.FABProgressCircle>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/editFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit"
+                android:tint="#ffffff"
+                app:backgroundTint="@color/colorAccent" />
 
         </RelativeLayout>
 

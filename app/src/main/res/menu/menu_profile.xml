@@ -3,7 +3,6 @@
     <item
         android:id="@+id/edit_profile"
         android:icon="@drawable/ic_edit"
-        android:title="@string/edit_profile"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/edit_profile" />
 
 </menu>
