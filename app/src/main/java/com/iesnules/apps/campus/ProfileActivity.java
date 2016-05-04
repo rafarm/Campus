@@ -88,13 +88,17 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            //TODO: Add conditions to change editable textedits...
+            case R.id.edit_profile:
+                ;
+
             case android.R.id.home:
                 onBackPressed();
         }
 
         return true;
     }
-
+//Edit button
     /**
      * Listener methods
      */
