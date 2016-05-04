@@ -9,6 +9,8 @@ import android.os.StrictMode;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.view.inputmethod.InputMethodManager;
+import android.view.View.OnClickListener;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -43,6 +47,7 @@ public class NewGroupFragment extends DialogFragment {
     private EditText mGroupNameEditText;
     private EditText mGroupDescEditText;
     private ProgressBar mProgressBarNewGroup;
+    private Button mButtonCreateNewGroup;
 
     private OnNewGroupFragmentListener mListener;
 
@@ -83,6 +88,7 @@ public class NewGroupFragment extends DialogFragment {
         mGroupNameEditText = (EditText)view.findViewById(R.id.groupNameEditText);
         mGroupDescEditText = (EditText)view.findViewById(R.id.groupDescEditText);
         mProgressBarNewGroup = (ProgressBar)view.findViewById(R.id.progressBarNewGroup);
+        mButtonCreateNewGroup = ((Button)view.findViewById(R.id.buttonDeleteNewGroup));
 
         ((Button)view.findViewById(R.id.buttonDeleteNewGroup)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,12 +97,34 @@ public class NewGroupFragment extends DialogFragment {
             }
         });
 
-        ((Button)view.findViewById(R.id.buttonNewGroup)).setOnClickListener(new View.OnClickListener() {
+
+        mGroupNameEditText.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void onClick(View view) {
-                new CreateGroupAsyncTask(getContext()).execute();
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Check if 's' is empty
+                mButtonCreateNewGroup.setEnabled(true);
+                mButtonCreateNewGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new CreateGroupAsyncTask(getContext()).execute();
+                    }
+                });
             }
-        });
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                int after) {
+                    // TODO Auto-generated method stub
+                    mButtonCreateNewGroup.setEnabled(false);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
 
         return view;
     }
