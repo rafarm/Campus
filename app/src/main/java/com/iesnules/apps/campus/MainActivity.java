@@ -264,18 +264,22 @@ public class MainActivity extends AppCompatActivity implements
                     switch (menuItemId) {
                         case R.id.bottomBarItemRecent:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemRecent);
+                            setTitle(R.string.nav_recent);
                             switchFragmentStack(getRecentFragmentStack());
                             break;
                         case R.id.bottomBarItemGroups:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemGroups);
+                            setTitle(R.string.nav_groups);
                             switchFragmentStack(getGroupsFragmentStack());
                             break;
                         case R.id.bottomBarItemResources:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemResources);
+                            setTitle(R.string.nav_resources);
                             switchFragmentStack(getResourcesFragmentStack());
                             break;
                         case R.id.bottomBarItemEvents:
                             mDrawerNavigationView.setCheckedItem(R.id.bottomBarItemEvents);
+                            setTitle(R.string.nav_events);
                             switchFragmentStack(getEventsFragmentStack());
                             break;
                     }
@@ -459,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             return true;
         }
 

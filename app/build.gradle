@@ -36,19 +36,21 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(path: ':backend', configuration: 'android-endpoints')
     //compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    //compile 'com.roughike:bottom-bar:1.3.1'
+    compile project(':bottom-bar')
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-identity:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-plus:8.4.0'
-    //compile 'com.roughike:bottom-bar:1.3.1'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
-    compile project(':bottom-bar')
 }
+
+
 
 
 
