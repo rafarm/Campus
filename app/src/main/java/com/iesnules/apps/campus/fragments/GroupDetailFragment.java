@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,16 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.GenericData;
+import com.iesnules.apps.campus.MainActivity;
 import com.iesnules.apps.campus.R;
+import com.iesnules.apps.campus.backend.group.model.GroupRecord;
+
+import java.io.IOException;
+import java.security.acl.Group;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,20 +116,50 @@ public class GroupDetailFragment extends Fragment {
         //mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public interface OnGroupDetailFragmentListener {
+        void onDeleteGroup(GroupRecord record, GroupDetailFragment sender);
+
+    private class DeleteGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
+
+        private Context mContext;
+
+        public DeleteGroupAsyncTask(Context context) {
+            mContext = context;
+        }
+
+
+        @Override
+        protected GroupRecord doInBackground(Void... params) {
+            GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
+                    getString(R.string.server_credential));
+            credential.setSelectedAccountName(MainActivity.getUserProfile().getUserAccountName());
+
+            GroupRecord record = GroupDetailFragment;
+            try {
+                record = service.delete(mGroupIndex, record).execute();
+            } catch (IOException e) {
+                record = null;
+                e.printStackTrace();
+            }
+
+            return record;
+        }
+
+        /**
+         * This interface must be implemented by activities that contain this
+         * fragment to allow an interaction in this fragment to be communicated
+         * to the activity and potentially other fragments contained in that
+         * activity.
+         * <p/>
+         * See the Android Training lesson <a href=
+         * "http://developer.android.com/training/basics/fragments/communicating.html"
+         * >Communicating with Other Fragments</a> for more information.
+         */
     /*
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
     */
+    }
 }
