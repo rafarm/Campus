@@ -1,8 +1,11 @@
 package com.iesnules.apps.campus.fragments;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +69,10 @@ public class EventsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Hide FAB for this fragment
-        getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
+        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
+        set.setTarget(fab);
+        set.start();
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_events, container, false);
