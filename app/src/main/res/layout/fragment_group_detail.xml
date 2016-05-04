@@ -6,9 +6,44 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment"
         android:id="@+id/msgTextView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="307dp"
+        android:layout_gravity="center_vertical|top"></LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Name"
+        android:id="@+id/GroupNameTextView"
+        android:layout_gravity="left|top"
+        android:editable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subject"
+        android:id="@+id/SubjectTextView"
+        android:layout_gravity="left|top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Manager"
+        android:id="@+id/GroupManagerTextView"
+        android:layout_gravity="left|top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coments"
+        android:id="@+id/ComentsTextView"
+        android:layout_gravity="left|top" />
 
 </FrameLayout>
