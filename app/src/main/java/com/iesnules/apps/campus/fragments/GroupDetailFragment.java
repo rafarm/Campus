@@ -27,6 +27,7 @@ import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 
 import java.io.IOException;
 import java.security.acl.Group;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -156,8 +157,13 @@ public class GroupDetailFragment extends Fragment {
         protected void onPostExecute(Boolean success) {
             if (success) {
 
+
             }
             else {
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Group delete error",
+                        getString(R.string.groups_alert_dialog_message), null, null);
+
+                fragment.show(getFragmentManager(), "groups_error");
 
             }
         }
