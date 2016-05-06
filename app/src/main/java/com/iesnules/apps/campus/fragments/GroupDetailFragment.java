@@ -154,6 +154,7 @@ public class GroupDetailFragment extends Fragment {
             if (success) {
 
 
+
             }
             else {
                 ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("Group delete error",
