@@ -15,18 +15,20 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.iesnules.apps.campus.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GroupDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link GroupDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupDetailFragment extends Fragment {
+public class GroupDetailFragment extends Fragment
+                        implements FABProgressListener {
     private static final String ARG_GROUP_INDEX = "groupIndex";
+
+    private FABProgressCircle mDeleteFABCircle;
+    private FloatingActionButton mDeleteFAB;
 
     private int mGroupIndex;
 
@@ -54,14 +56,17 @@ public class GroupDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mGroupIndex = getArguments().getInt(ARG_GROUP_INDEX);
         }
+        mDeleteFABCircle.attachListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         // Hide FAB for this fragment
         FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
@@ -72,10 +77,15 @@ public class GroupDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_detail, container, false);
 
+        mDeleteFABCircle = (FABProgressCircle)view.findViewById(R.id.updateFabProgressCircle);
+        mDeleteFAB = (FloatingActionButton)view.findViewById(R.id.updateFab);
+
+
         TextView msgView = (TextView)view.findViewById(R.id.msgTextView);
         msgView.setText("Group record index: " + mGroupIndex);
 
         return view;
+
     }
 
     /*
@@ -106,6 +116,11 @@ public class GroupDetailFragment extends Fragment {
         //mListener = null;
     }
 
+
+    //FAB functions
+    public void onFABProgressAnimationEnd() {
+        mDeleteFAB.setEnabled(true);
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

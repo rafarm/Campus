@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.iesnules.apps.campus.fragments.GroupDetailFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -10,5 +11,41 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment"
         android:id="@+id/msgTextView" />
+
+    <RelativeLayout
+        android:id="@+id/updaterFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end">
+
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:id="@+id/updateFabProgressCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:reusable="true">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/updateFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete"
+                android:tint="#ffffff"
+                app:backgroundTint="@color/colorAccent" />
+
+
+        </com.github.jorgecastilloprz.FABProgressCircle>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:tint="#ffffff"
+            app:backgroundTint="@color/colorAccent" />
+
+    </RelativeLayout>
+
+
 
 </FrameLayout>

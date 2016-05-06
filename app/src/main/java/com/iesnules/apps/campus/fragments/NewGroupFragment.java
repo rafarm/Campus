@@ -94,7 +94,7 @@ public class NewGroupFragment extends DialogFragment {
         mEmptyNameTextView = (TextView)view.findViewById(R.id.emptyNameTextView);
 
 
-        ((Button)view.findViewById(R.id.buttonDeleteNewGroup)).setOnClickListener(new View.OnClickListener() {
+        ((Button)view.findViewById(R.id.buttonCancelNewGroup)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -104,21 +104,21 @@ public class NewGroupFragment extends DialogFragment {
         mButtonCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isEmpty();
+                if (isGroupNameEmpty()){
+                    mEmptyNameTextView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mEmptyNameTextView.setVisibility(View.GONE);
+                    new CreateGroupAsyncTask(getContext()).execute();
+                }
             }
         });
 
         return view;
     }
 
-    private void isEmpty() {
-        if (mGroupNameEditText.getText().toString().trim().length() == 0){
-            mEmptyNameTextView.setVisibility(View.VISIBLE);
-        }
-        else {
-            mEmptyNameTextView.setVisibility(View.GONE);
-            new CreateGroupAsyncTask(getContext()).execute();
-        }
+    private boolean isGroupNameEmpty() {
+        return mGroupNameEditText.getText().toString().trim().length() == 0;
     }
 
     @Override

@@ -65,12 +65,12 @@ public class ProfileActivity extends AppCompatActivity
         mUpdateFAB = (FloatingActionButton)findViewById(R.id.updateFab);
         mEditFAB = (FloatingActionButton)findViewById(R.id.editFab);
         mUpdateFABCircle.attachListener(this);
-        ifEditProfileUI(false);
+        EditProfileUI(false);
 
         mEditFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ifEditProfileUI(true);
+                EditProfileUI(true);
             }
         });
         populateUI();
@@ -107,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity
     }
 
 //Update UI
-    private void ifEditProfileUI(boolean a) {
+    private void EditProfileUI(boolean a) {
         mNickNameEditText.setEnabled(a);
         mCenterNameEditText.setEnabled(a);
         mDescriptionEdiText.setEnabled(a);
@@ -140,7 +140,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onFABProgressAnimationEnd() {
         mUpdateFAB.setEnabled(true);
-        ifEditProfileUI(false);
+        EditProfileUI(false);
     }
 
     private class UpdateUserProfileAsyncTask extends AsyncTask<Void, Void, UserRecord> {
