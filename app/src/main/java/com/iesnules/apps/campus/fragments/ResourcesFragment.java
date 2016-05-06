@@ -69,8 +69,9 @@ public class ResourcesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Hide FAB for this fragment
+
+        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
         if (fab.getScaleX() > 0) {
-            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
             set.setTarget(fab);
             set.start();}
