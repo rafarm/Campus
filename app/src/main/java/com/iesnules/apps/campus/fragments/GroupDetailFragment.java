@@ -16,6 +16,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -39,6 +40,7 @@ public class GroupDetailFragment extends Fragment {
     private static final String ARG_GROUP_INDEX = "groupIndex";
 
     private int mGroupIndex;
+    private GroupRecord mGroupRecord;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -66,6 +68,7 @@ public class GroupDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupIndex = getArguments().getInt(ARG_GROUP_INDEX);
+            mGroupRecord = MainActivity.getGroupsList().get(mGroupIndex);
         }
     }
 
@@ -118,8 +121,9 @@ public class GroupDetailFragment extends Fragment {
 
     public interface OnGroupDetailFragmentListener {
         void onDeleteGroup(GroupRecord record, GroupDetailFragment sender);
+    }
 
-    private class DeleteGroupAsyncTask extends AsyncTask<Void, Void, GroupRecord> {
+    private class DeleteGroupAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         private Context mContext;
 
@@ -129,37 +133,33 @@ public class GroupDetailFragment extends Fragment {
 
 
         @Override
-        protected GroupRecord doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(mContext,
                     getString(R.string.server_credential));
             credential.setSelectedAccountName(MainActivity.getUserProfile().getUserAccountName());
 
-            GroupRecord record = GroupDetailFragment;
+            com.iesnules.apps.campus.backend.group.Group.Builder builder = new com.iesnules.apps.campus.backend.group.Group.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(), credential);
+            com.iesnules.apps.campus.backend.group.Group service = builder.build();
+
             try {
-                record = service.delete(mGroupIndex, record).execute();
+                service.delete(mGroupRecord.getId()).execute();
             } catch (IOException e) {
-                record = null;
                 e.printStackTrace();
+                return false;
             }
 
-            return record;
+            return true;
         }
 
-        /**
-         * This interface must be implemented by activities that contain this
-         * fragment to allow an interaction in this fragment to be communicated
-         * to the activity and potentially other fragments contained in that
-         * activity.
-         * <p/>
-         * See the Android Training lesson <a href=
-         * "http://developer.android.com/training/basics/fragments/communicating.html"
-         * >Communicating with Other Fragments</a> for more information.
-         */
-    /*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-    */
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+
+            }
+            else {
+
+            }
+        }
     }
 }
