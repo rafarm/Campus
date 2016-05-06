@@ -70,9 +70,11 @@ public class RecentFragment extends Fragment {
 
         // Hide FAB for this fragment
         FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
-        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
-        set.setTarget(fab);
-        set.start();
+        if (fab.getScaleX() > 0) {
+            AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
+            set.setTarget(fab);
+            set.start();
+        }
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recent, container, false);
