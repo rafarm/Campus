@@ -45,4 +45,11 @@
     <string name="description">Add description</string>
     <string name="group_create_error">Error creating group</string>
 
+
+    <!-- GroupFragment Strings -->
+
+    <string name= "prof_groupname">Group Name</string>
+    <string name= "prof_groupdescription">Group Description</string>
+
+
 </resources>

@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements
      *
      * @param newFragment
      */
-    private void pushFragment(Fragment newFragment) {
+    private void pushFragment(GroupDetailFragment newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (mCurrentFragmentStack != null) {

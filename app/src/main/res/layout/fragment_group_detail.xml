@@ -5,11 +5,6 @@
     tools:context="com.iesnules.apps.campus.fragments.GroupDetailFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment"
-        android:id="@+id/msgTextView" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -17,33 +12,51 @@
         android:layout_height="307dp"
         android:layout_gravity="center_vertical|top"></LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group Name"
-        android:id="@+id/GroupNameTextView"
-        android:layout_gravity="left|top"
-        android:editable="true" />
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/GroupName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:maxLength="30"
+        android:hint="@string/prof_groupname"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/GroupDescription"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:maxLength="30"
+        android:hint="@string/prof_groupdescription"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:textSize="16dp" />
 
     <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/msgTextView" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/updateFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Subject"
-        android:id="@+id/SubjectTextView"
-        android:layout_gravity="left|top" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Group Manager"
-        android:id="@+id/GroupManagerTextView"
-        android:layout_gravity="left|top" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Coments"
-        android:id="@+id/ComentsTextView"
-        android:layout_gravity="left|top" />
-
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_group_add" />
 </FrameLayout>

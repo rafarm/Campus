@@ -1,18 +1,19 @@
 package com.iesnules.apps.campus.fragments;
 
+;
+
+
+import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.iesnules.apps.campus.R;
@@ -25,10 +26,19 @@ import com.iesnules.apps.campus.R;
  * Use the {@link GroupDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
+
+
 public class GroupDetailFragment extends Fragment {
     private static final String ARG_GROUP_INDEX = "groupIndex";
 
     private int mGroupIndex;
+
+    private EditText mGroupNameEditText;
+    private EditText mGroupDescriptionEditText;
+    private FloatingActionButton mUpdateFAB;
+
 
     //private OnFragmentInteractionListener mListener;
 
@@ -67,10 +77,37 @@ public class GroupDetailFragment extends Fragment {
         FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
         AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_out);
         set.setTarget(fab);
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fab_animation_in);
+                set.setTarget(mUpdateFAB);
+                set.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
         set.start();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_detail, container, false);
+
+        mGroupNameEditText = (EditText)view.findViewById(R.id.groupNameEditText);
+        mGroupDescriptionEditText = (EditText)view.findViewById(R.id.groupDescEditText);
+        mUpdateFAB = (FloatingActionButton)view.findViewById(R.id.updateFab);
 
         TextView msgView = (TextView)view.findViewById(R.id.msgTextView);
         msgView.setText("Group record index: " + mGroupIndex);
@@ -104,6 +141,22 @@ public class GroupDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         //mListener = null;
+    }
+
+    public EditText getmGroupNameEditText() {
+        return mGroupNameEditText;
+    }
+
+    public void setmGroupNameEditText(EditText mGroupNameEditText) {
+        this.mGroupNameEditText = mGroupNameEditText;
+    }
+
+    public EditText getmGroupDescriptionEditText() {
+        return mGroupDescriptionEditText;
+    }
+
+    public void setmGroupDescriptionEditText(EditText mGroupDescriptionEditText) {
+        this.mGroupDescriptionEditText = mGroupDescriptionEditText;
     }
 
     /**
