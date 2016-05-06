@@ -5,9 +5,24 @@
     tools:context="com.iesnules.apps.campus.fragments.AboutDialogFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/App_Image"
+        android:layout_gravity="left|top" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/IES_Image"
+        android:layout_gravity="right|top" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Aboutdialogframent_CreatedBy"
+        android:id="@+id/textView"
+        android:layout_gravity="left|center_vertical" />
 
 </FrameLayout>

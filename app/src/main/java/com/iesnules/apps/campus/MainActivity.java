@@ -49,6 +49,7 @@ import com.iesnules.apps.campus.backend.group.model.CollectionResponseGroupRecor
 import com.iesnules.apps.campus.backend.group.model.GroupRecord;
 import com.iesnules.apps.campus.backend.user.User;
 import com.iesnules.apps.campus.backend.user.model.UserRecord;
+import com.iesnules.apps.campus.fragments.AboutDialogFragment;
 import com.iesnules.apps.campus.fragments.ErrorDialogFragment;
 import com.iesnules.apps.campus.fragments.EventsFragment;
 import com.iesnules.apps.campus.fragments.GroupDetailFragment;
@@ -464,6 +465,8 @@ public class MainActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
+            AboutDialogFragment fragment = AboutDialogFragment.newInstance();
+            fragment.show(getSupportFragmentManager(), "about");
             return true;
         }
 

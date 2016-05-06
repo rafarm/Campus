@@ -45,4 +45,7 @@
     <string name="description">Add description</string>
     <string name="group_create_error">Error creating group</string>
 
+    <string name="Aboutdialogframent_title">About</string>
+    <string name="Aboutdialogframent_CreatedBy">A App by IES Gilabert de Centelles</string>
+
 </resources>
